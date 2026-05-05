@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>US Phenomena Timeline</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Courier New',monospace;background:#111;color:#ddd;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* ── Controls bar ── */
+#controls{display:flex;align-items:center;gap:9px;padding:7px 12px;background:#0a0a0a;border-bottom:1px solid #1e1e1e;flex-wrap:wrap;flex-shrink:0}
+#title{font-size:11px;font-weight:bold;letter-spacing:2px;color:#555;white-space:nowrap}
+#year-lbl{font-size:22px;font-weight:bold;min-width:50px;color:#fff}
+#slider-wrap{flex:1;min-width:180px;display:flex;flex-direction:column;gap:2px}
+#slider{width:100%;accent-color:#3B8BD4;cursor:pointer}
+.ticks{display:flex;justify-content:space-between;font-size:9px;color:#333}
+.btn-group{display:flex;border:1px solid #2a2a2a;border-radius:4px;overflow:hidden}
+.btn-group label{font-size:9px;color:#444;padding:0 5px;line-height:26px;white-space:nowrap;background:#111}
+.gbtn{background:transparent;border:none;border-left:1px solid #2a2a2a;color:#555;font-family:inherit;font-size:10px;padding:3px 7px;cursor:pointer;white-space:nowrap;transition:all .15s}
+.gbtn:hover{background:#1a1a1a;color:#fff}
+.gbtn.on{background:#0f2540;color:#7ecfff}
+.gbtn.on-heat{background:#1a0f30;color:#b388ff}
+.gbtn.on-green{background:#0d1f10;color:#6fcf6f}
+.sbtn{background:transparent;border:1px solid #2a2a2a;border-radius:4px;color:#555;font-family:inherit;font-size:10px;padding:3px 8px;cursor:pointer}
+.sbtn:hover{background:#1a1a1a;color:#fff}
+.sbtn.on{background:#0f2540;border-color:#3B8BD4;color:#7ecfff}
+
+/* ── Main layout: map + sidebar ── */
+#main{display:flex;flex:1;overflow:hidden}
+#map-area{position:relative;flex:1;overflow:hidden}
+#map{width:100%;height:100%}
+.leaflet-container{background:#1e1e1e!important}
+
+/* ── Sidebar ── */
+#sidebar{width:220px;flex-shrink:0;background:#0a0a0a;border-left:1px solid #1e1e1e;display:flex;flex-direction:column;overflow:hidden}
+#sidebar-header{padding:8px 10px;border-bottom:1px solid #1e1e1e;font-size:10px;letter-spacing:1px;color:#444;flex-shrink:0}
+#sidebar-content{flex:1;overflow-y:auto;padding:6px 0}
+#sidebar-content::-webkit-scrollbar{width:3px}
+#sidebar-content::-webkit-scrollbar-thumb{background:#2a2a2a}
+.ev-item{padding:6px 10px;border-bottom:1px solid #111;cursor:default}
+.ev-item:hover{background:#111}
+.ev-year{font-size:9px;color:#444;margin-bottom:2px}
+.ev-title{font-size:11px;color:#aaa;line-height:1.3}
+.ev-cat{display:inline-block;font-size:9px;padding:1px 4px;border-radius:2px;margin-top:2px}
+.cat-uf{background:#001833;color:#4499dd}
+.cat-bf{background:#1a0a00;color:#aa6622}
+.cat-ub{background:#001a10;color:#336644}
+.cat-bb{background:#100a00;color:#664422}
+
+/* ── Loading overlay ── */
+#loader{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;background:rgba(10,10,10,.95);border:1px solid #2a2a2a;border-radius:8px;padding:14px 20px;font-size:11px;color:#888;display:none;text-align:center;pointer-events:none;min-width:180px}
+#loader.show{display:block}
+#loader-bar{width:100%;height:2px;background:#1a1a1a;border-radius:1px;margin-top:8px;overflow:hidden}
+#loader-fill{height:100%;background:#3B8BD4;border-radius:1px;width:0;transition:width .25s}
+
+/* ── Legend ── */
+#legend{position:absolute;bottom:10px;left:10px;z-index:900;background:rgba(8,8,8,.95);border:1px solid #1e1e1e;border-radius:6px;padding:9px 11px;font-size:10px;line-height:1.85;pointer-events:none;min-width:185px}
+#legend strong{font-size:11px;color:#ddd}
+.ld{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.lg{display:inline-block;width:36px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle}
+
+/* ── Stats ── */
+#stats{position:absolute;top:10px;right:10px;z-index:900;background:rgba(8,8,8,.92);border:1px solid #1e1e1e;border-radius:6px;padding:7px 11px;font-size:10px;min-width:180px}
+#stats strong{color:#ddd;display:block;margin-bottom:3px;font-size:11px}
+.st{color:#444;padding:1px 0;display:flex;justify-content:space-between;gap:8px}
+.st span{color:#bbb;font-weight:bold}
+
+/* ── Popups ── */
+.leaflet-popup-content-wrapper{background:#111;color:#ccc;border:1px solid #2a2a2a;box-shadow:none;font-family:'Courier New',monospace;font-size:11px}
+.leaflet-popup-tip{background:#111}
+.leaflet-popup-close-button{color:#555!important}
+.leaflet-control-attribution{font-size:9px!important;background:rgba(0,0,0,.6)!important;color:#333!important}
+.leaflet-control-attribution a{color:#444!important}
+</style>
+</head>
+<body>
+
+<div id="controls">
+  <span id="title">// US PHENOMENA</span>
+  <span id="year-lbl">1869</span>
+  <div id="slider-wrap">
+    <input type="range" id="slider" min="1869" max="2019" value="1869" step="1"/>
+    <div class="ticks">
+      <span>1869</span><span>1890</span><span>1910</span><span>1930</span>
+      <span>1950</span><span>1970</span><span>1990</span><span>2010</span><span>2019</span>
+    </div>
+  </div>
+  <button class="sbtn" id="play-btn">&#9654; Play</button>
+  <button class="sbtn" onclick="doReset()">&#8635;</button>
+
+  <div class="btn-group">
+    <label>&#9762; Nuclear</label>
+    <button class="gbtn on" id="nuke-btn" onclick="toggle('nuclear')">On</button>
+  </div>
+  <div class="btn-group">
+    <label>&#9733; UFO Crashes</label>
+    <button class="gbtn on" id="crash-btn" onclick="toggle('crash')">On</button>
+  </div>
+  <div class="btn-group">
+    <label>&#9733; UFO Sightings</label>
+    <button class="gbtn" id="ufos-off" onclick="setMode('ufo','off')">Off</button>
+    <button class="gbtn on-heat" id="ufos-heat" onclick="setMode('ufo','heat')">Heat</button>
+  </div>
+  <div class="btn-group">
+    <label>&#128062; Bigfoot</label>
+    <button class="gbtn" id="bf-off" onclick="setMode('bf','off')">Off</button>
+    <button class="gbtn on-heat" id="bf-heat" onclick="setMode('bf','heat')">Heat</button>
+  </div>
+  <div class="btn-group">
+    <label>&#127795; Parks</label>
+    <button class="gbtn on-green" id="parks-btn" onclick="toggle('parks')">On</button>
+  </div>
+</div>
+
+<div id="main">
+  <div id="map-area">
+    <div id="map"></div>
+
+    <div id="loader">
+      <div id="loader-msg">Loading...</div>
+      <div id="loader-bar"><div id="loader-fill"></div></div>
+    </div>
+
+    <div id="legend">
+      <strong>&#9762; Nuclear Facilities</strong><br>
+      <span class="ld" style="background:#3B8BD4"></span>Power Plant &nbsp;
+      <span class="ld" style="background:#E24B4A"></span>Weapons Lab<br>
+      <span class="ld" style="background:#BA7517"></span>Research Lab &nbsp;
+      <span class="ld" style="background:#D85A30"></span>Testing<br>
+      <span class="ld" style="background:#185FA5"></span>Enrichment &nbsp;
+      <span class="ld" style="background:#993C1D"></span>Weapons/Waste<br>
+      <br><strong>&#9733; UFO Crashes</strong>&nbsp;<span style="color:#555;font-size:9px">individual markers</span><br>
+      <br><strong>&#9733; UFO Sightings</strong>&nbsp;<span style="color:#555;font-size:9px">heatmap</span><br>
+      <span class="lg" style="background:linear-gradient(to right,#000828,#0044bb,#00aaff,#aae8ff)"></span>density<br>
+      <br><strong>&#128062; Bigfoot Sightings</strong>&nbsp;<span style="color:#555;font-size:9px">heatmap</span><br>
+      <span class="lg" style="background:linear-gradient(to right,#1a0800,#7a3000,#C87D2F,#ffe8a0)"></span>density<br>
+      <br><strong>&#127795; National Parks</strong>&nbsp;<span style="color:#555;font-size:9px">static</span>
+    </div>
+
+    <div id="stats">
+      <strong>Up to <span id="yr2">1869</span></strong>
+      <div class="st">&#9762; Nuclear: <span id="cnt-nuke">0</span></div>
+      <div class="st">&#9733; UFO Crashes: <span id="cnt-crash">0</span></div>
+      <div class="st">&#9733; UFO Sightings: <span id="cnt-ufo">—</span></div>
+      <div class="st">&#128062; Bigfoot: <span id="cnt-bf">—</span></div>
+      <div class="st">&#127795; Parks: <span id="cnt-parks">0</span></div>
+    </div>
+  </div>
+
+  <div id="sidebar">
+    <div id="sidebar-header">// CULTURAL EVENTS</div>
+    <div id="sidebar-content"></div>
+  </div>
+</div>
+
+<script>
+// ── Static data (baked in) ────────────────────────────────────────────────────
+const NUKE_COLORS = {
+  "Power Plant":"#3B8BD4","Weapons Lab":"#E24B4A","Research Lab":"#BA7517",
+  "Weapons Production":"#A32D2D","Fuel Enrichment":"#185FA5","Weapons Testing":"#D85A30",
+  "Waste Storage":"#888780","Waste Processing":"#5F5E5A","Weapons Assembly":"#791F1F",
+  "Weapons Production/Waste":"#993C1D"
+};
+const CAT_COLORS = {"UFO Film":"cat-uf","Bigfoot Film":"cat-bf","UFO Book":"cat-ub","Bigfoot Book":"cat-bb"};
+
+// ── Map ───────────────────────────────────────────────────────────────────────
+const mainMap = L.map('map',{
+  center:[39.5,-98.35],zoom:4,minZoom:3,maxZoom:12,
+  maxBounds:L.latLngBounds([[15,-170],[72,-50]]),maxBoundsViscosity:0.9
+});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  {maxZoom:19,attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(mainMap);
+mainMap.fitBounds([[24,-125],[50,-66]]);
+
+const renderer = L.canvas({padding:0.5});
+
+// ── Heatmap layers ────────────────────────────────────────────────────────────
+const ufoHeat = L.heatLayer([],{radius:18,blur:22,maxZoom:10,
+  gradient:{0.15:'#000828',0.4:'#0033bb',0.65:'#00aaff',0.85:'#aae8ff',1:'#ffffff'}
+}).addTo(mainMap);
+
+const bfHeat = L.heatLayer([],{radius:20,blur:24,maxZoom:10,
+  gradient:{0.15:'#1a0800',0.4:'#7a3000',0.65:'#C87D2F',0.85:'#e8b060',1:'#fff5d0'}
+}).addTo(mainMap);
+
+// ── Icon builders ─────────────────────────────────────────────────────────────
+function mkNukeIcon(color){
+  return L.divIcon({html:
+    '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">'
+    +'<circle cx="10" cy="10" r="8" fill="'+color+'" fill-opacity=".85" stroke="#fff" stroke-width="1"/>'
+    +'<text x="10" y="14" text-anchor="middle" font-size="8" fill="#fff">&#9762;</text></svg>',
+    className:'',iconSize:[20,20],iconAnchor:[10,10]
+  });
+}
+function mkCrashIcon(){
+  return L.divIcon({html:
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">'
+    +'<circle cx="12" cy="12" r="8" fill="none" stroke="#63C55A" stroke-width="1" opacity=".5"/>'
+    +'<circle cx="12" cy="12" r="4" fill="#63C55A" fill-opacity=".9" stroke="#fff" stroke-width="1"/>'
+    +'<line x1="12" y1="2" x2="12" y2="6" stroke="#63C55A" stroke-width="1.5"/>'
+    +'<line x1="18" y1="12" x2="22" y2="12" stroke="#63C55A" stroke-width="1.5"/>'
+    +'<line x1="2" y1="12" x2="6" y2="12" stroke="#63C55A" stroke-width="1.5"/>'
+    +'<line x1="12" y1="18" x2="12" y2="22" stroke="#63C55A" stroke-width="1.5"/></svg>',
+    className:'',iconSize:[24,24],iconAnchor:[12,12]
+  });
+}
+function mkParkIcon(){
+  return L.divIcon({html:
+    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">'
+    +'<polygon points="7,1 13,13 1,13" fill="#2d7a2d" fill-opacity=".85" stroke="#4aaa4a" stroke-width="0.8"/></svg>',
+    className:'',iconSize:[14,14],iconAnchor:[7,13]
+  });
+}
+
+// ── Tile cache ────────────────────────────────────────────────────────────────
+const ufoCache={}, bfCache={};
+const ufoLoaded=new Set(), bfLoaded=new Set();
+let ufoAllPts=[], bfAllPts=[];
+
+function setLoader(msg,pct){
+  const el=document.getElementById('loader');
+  if(msg===null){el.classList.remove('show');return;}
+  el.classList.add('show');
+  document.getElementById('loader-msg').textContent=msg;
+  document.getElementById('loader-fill').style.width=pct+'%';
+}
+
+async function loadDecades(prefix, cache, loaded, allPts, upToYear, label){
+  const needed=[];
+  for(let d=1860;d<=upToYear;d+=10) if(!loaded.has(d)) needed.push(d);
+  if(!needed.length) return;
+  setLoader('Loading '+label+' data...',5);
+  for(let i=0;i<needed.length;i++){
+    const decade=needed[i];
+    try{
+      const r=await fetch('data/'+prefix+'/'+decade+'.json');
+      if(r.ok){
+        const data=await r.json();
+        cache[decade]=data;
+        // UFO sightings stored as arrays [lat,lng,year]; BF as objects
+        if(Array.isArray(data[0])){
+          data.forEach(function(pt){allPts.push(pt);});
+        } else {
+          data.forEach(function(pt){allPts.push(pt);});
+        }
+      }
+    }catch(e){}
+    loaded.add(decade);
+    setLoader('Loading '+label+' data...',5+90*(i+1)/needed.length);
+  }
+  setLoader(null);
+}
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let showNuclear=true, showCrash=true, ufoMode='heat', bfMode='heat', showParks=true;
+let playing=false, timer=null, currentYear=1869;
+
+// Marker arrays (built after static data fetches)
+let nukeMarkers=[], crashMarkers=[], parkMarkers=[];
+let staticReady=false;
+
+// ── Static data fetch ─────────────────────────────────────────────────────────
+async function loadStatic(){
+  const [nf,cf,pf,evf]=await Promise.all([
+    fetch('data/static/nuclear.json').then(r=>r.json()),
+    fetch('data/static/ufo_crashes.json').then(r=>r.json()),
+    fetch('data/static/parks.json').then(r=>r.json()),
+    fetch('data/static/cultural_events.json').then(r=>r.json()),
+  ]);
+
+  // Nuclear
+  nf.forEach(function(d){
+    const col=NUKE_COLORS[d.type]||'#3B8BD4';
+    const m=L.marker([d.lat,d.lng],{icon:mkNukeIcon(col)});
+    m.bindPopup('<b>'+d.name+'</b><br><span style="color:#888">'+d.type+'</span><br>'+d.city+', '+d.state+'<br><b>Opened:</b> '+d.year);
+    m.bindTooltip(d.name+' ('+d.year+')');
+    nukeMarkers.push({m:m,year:d.year});
+  });
+
+  // UFO Crashes
+  cf.forEach(function(d){
+    const m=L.marker([d.lat,d.lng],{icon:mkCrashIcon()});
+    m.bindPopup('<b>'+d.name+'</b><br>'+d.city+', '+d.state+'<br><b>Year:</b> '+d.year);
+    m.bindTooltip(d.name+' ('+d.year+')');
+    crashMarkers.push({m:m,year:d.year});
+  });
+
+  // Parks (static — always show when enabled)
+  pf.forEach(function(d){
+    const m=L.marker([d.lat,d.lng],{icon:mkParkIcon()});
+    m.bindPopup('<b>'+d.name+'</b><br>'+d.state);
+    m.bindTooltip(d.name);
+    parkMarkers.push(m);
+    if(showParks) m.addTo(mainMap);
+  });
+
+  // Cultural events sidebar
+  window.EVENTS = evf;
+  staticReady=true;
+  update(currentYear);
+}
+
+// ── Update sidebar ────────────────────────────────────────────────────────────
+function updateSidebar(year){
+  if(!window.EVENTS) return;
+  const visible=window.EVENTS.filter(function(e){return e.year<=year;})
+    .slice().reverse().slice(0,40);
+  document.getElementById('sidebar-content').innerHTML=visible.map(function(e){
+    const cc=CAT_COLORS[e.cat]||'cat-uf';
+    const title=e.title||(e['Book Title']||'');
+    return '<div class="ev-item">'
+      +'<div class="ev-year">'+e.year+'</div>'
+      +'<div class="ev-title">'+title+'</div>'
+      +'<span class="ev-cat '+cc+'">'+e.cat+'</span>'
+      +'</div>';
+  }).join('');
+}
+
+// ── Main update ───────────────────────────────────────────────────────────────
+async function update(year){
+  currentYear=year;
+  document.getElementById('year-lbl').textContent=year;
+  document.getElementById('yr2').textContent=year;
+  updateSidebar(year);
+  if(!staticReady) return;
+
+  // Nuclear
+  let nCount=0;
+  nukeMarkers.forEach(function(item){
+    const want=item.year<=year&&showNuclear;
+    if(want){if(!mainMap.hasLayer(item.m))item.m.addTo(mainMap);nCount++;}
+    else{if(mainMap.hasLayer(item.m))mainMap.removeLayer(item.m);}
+  });
+  document.getElementById('cnt-nuke').textContent=nCount;
+
+  // UFO Crashes
+  let cCount=0;
+  crashMarkers.forEach(function(item){
+    const want=item.year<=year&&showCrash;
+    if(want){if(!mainMap.hasLayer(item.m))item.m.addTo(mainMap);cCount++;}
+    else{if(mainMap.hasLayer(item.m))mainMap.removeLayer(item.m);}
+  });
+  document.getElementById('cnt-crash').textContent=cCount;
+
+  // Parks
+  let pCount=0;
+  parkMarkers.forEach(function(m){
+    if(showParks){if(!mainMap.hasLayer(m))m.addTo(mainMap);pCount++;}
+    else{if(mainMap.hasLayer(m))mainMap.removeLayer(m);}
+  });
+  document.getElementById('cnt-parks').textContent=showParks?pCount:0;
+
+  // UFO Sightings heatmap
+  if(ufoMode==='heat'){
+    if(!mainMap.hasLayer(ufoHeat))mainMap.addLayer(ufoHeat);
+    await loadDecades('ufo_sightings',ufoCache,ufoLoaded,ufoAllPts,year,'UFO');
+    const pts=ufoAllPts.filter(function(p){return (Array.isArray(p)?p[2]:p.year)<=year;})
+      .map(function(p){return Array.isArray(p)?[p[0],p[1],0.5]:[p.lat,p.lng,0.5];});
+    ufoHeat.setLatLngs(pts);
+    document.getElementById('cnt-ufo').textContent=pts.length.toLocaleString();
+  } else {
+    if(mainMap.hasLayer(ufoHeat))mainMap.removeLayer(ufoHeat);
+    document.getElementById('cnt-ufo').textContent='—';
+  }
+
+  // Bigfoot heatmap
+  if(bfMode==='heat'){
+    if(!mainMap.hasLayer(bfHeat))mainMap.addLayer(bfHeat);
+    await loadDecades('bigfoot',bfCache,bfLoaded,bfAllPts,year,'Bigfoot');
+    const bfPts=bfAllPts.filter(function(p){return p.year<=year;})
+      .map(function(p){return[p.lat,p.lng,0.6];});
+    bfHeat.setLatLngs(bfPts);
+    document.getElementById('cnt-bf').textContent=bfPts.length.toLocaleString();
+  } else {
+    if(mainMap.hasLayer(bfHeat))mainMap.removeLayer(bfHeat);
+    document.getElementById('cnt-bf').textContent='—';
+  }
+}
+
+// ── Toggle helpers ────────────────────────────────────────────────────────────
+function toggle(layer){
+  if(layer==='nuclear'){showNuclear=!showNuclear;document.getElementById('nuke-btn').classList.toggle('on',showNuclear);}
+  else if(layer==='crash'){showCrash=!showCrash;document.getElementById('crash-btn').classList.toggle('on',showCrash);}
+  else if(layer==='parks'){showParks=!showParks;document.getElementById('parks-btn').classList.toggle('on-green',showParks);}
+  update(currentYear);
+}
+
+function setMode(layer,mode){
+  if(layer==='ufo'){
+    ufoMode=mode;
+    document.getElementById('ufos-off').classList.toggle('on',mode==='off');
+    document.getElementById('ufos-heat').classList.toggle('on-heat',mode==='heat');
+  } else {
+    bfMode=mode;
+    document.getElementById('bf-off').classList.toggle('on',mode==='off');
+    document.getElementById('bf-heat').classList.toggle('on-heat',mode==='heat');
+  }
+  update(currentYear);
+}
+
+// ── Playback ──────────────────────────────────────────────────────────────────
+const slider=document.getElementById('slider');
+slider.addEventListener('input',function(){update(+this.value);});
+
+function stopPlay(){playing=false;clearInterval(timer);document.getElementById('play-btn').innerHTML='&#9654; Play';}
+function doReset(){stopPlay();slider.value=1869;update(1869);}
+
+document.getElementById('play-btn').addEventListener('click',function(){
+  if(playing){stopPlay();return;}
+  if(+slider.value>=2019){doReset();return;}
+  playing=true;this.innerHTML='&#9646;&#9646; Stop';
+  timer=setInterval(function(){
+    const n=+slider.value+1;
+    if(n>2019){stopPlay();return;}
+    slider.value=n;update(n);
+  },80);
+});
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+loadStatic();
+</script>
+</body>
+</html>
