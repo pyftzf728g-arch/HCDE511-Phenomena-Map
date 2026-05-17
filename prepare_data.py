@@ -121,7 +121,7 @@ for _, r in bf.iterrows():
         "lng":   round(float(r['Longitude']), 4),
         "year":  int(r['year']),
         "cls":   str(r['Classification']),
-        "city":  str(r['City']),
+        "county": str(r['County']),
         "state": str(r['State']),
     })
 

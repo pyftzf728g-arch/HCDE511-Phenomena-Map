@@ -520,10 +520,10 @@ function getBfMarker(idx, pt){
   m.bindPopup(
     '<div class="popup-title">&#128062; Bigfoot Sighting</div>'
     +'<div class="popup-field">Year: <span>'+pt.year+'</span></div>'
-    +'<div class="popup-field">Location: <span>'+pt.city+', '+pt.state+'</span></div>'
+    +'<div class="popup-field">Location: <span>'+pt.county+', '+pt.state+'</span></div>'
     +'<div class="popup-field">Classification: <span>'+pt.cls+'</span></div>'
   ,{maxWidth:280});
-  m.bindTooltip(pt.city+', '+pt.state+' ('+pt.year+')',{direction:'top'});
+  m.bindTooltip(pt.county+', '+pt.state+' ('+pt.year+')',{direction:'top'});
   bfMarkerPool.set(idx,m);
   return m;
 }
