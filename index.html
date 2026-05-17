@@ -155,13 +155,7 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
     </div>
 
     <div id="legend">
-      <strong>&#9762; Nuclear Facilities</strong><br>
-      <span class="ld" style="background:#3B8BD4"></span>Power Plant &nbsp;
-      <span class="ld" style="background:#E24B4A"></span>Weapons Lab<br>
-      <span class="ld" style="background:#BA7517"></span>Research Lab &nbsp;
-      <span class="ld" style="background:#D85A30"></span>Testing<br>
-      <span class="ld" style="background:#185FA5"></span>Enrichment &nbsp;
-      <span class="ld" style="background:#993C1D"></span>Weapons/Waste<br>
+      <img src="data:image/png;base64," width="16" height="16" style="vertical-align:middle;margin-right:5px;filter:drop-shadow(0 0 1px rgba(0,0,0,.5))"/><strong>Nuclear Facilities</strong><br>
       <br><strong>&#9733; UFO Crashes</strong>&nbsp;<span style="color:#333;font-size:9px">individual markers</span><br>
       <br><strong>&#9733; UFO Sightings</strong>&nbsp;<span id="ufo-legend-mode" style="color:#333;font-size:9px">heatmap</span><br>
       <span class="lg" style="background:linear-gradient(to right,#000828,#0044bb,#00aaff,#aae8ff)"></span>density<br>
@@ -263,10 +257,8 @@ const bfCluster  = makeCluster('bf');
 // ═══════════════════════════════════════════════════════════════════════════════
 function mkNukeIcon(color){
   return L.divIcon({
-    html:'<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">'
-        +'<circle cx="10" cy="10" r="8" fill="'+color+'" fill-opacity=".85" stroke="#fff" stroke-width="1"/>'
-        +'<text x="10" y="14" text-anchor="middle" font-size="8" fill="#fff">&#9762;</text></svg>',
-    className:'',iconSize:[20,20],iconAnchor:[10,10]
+    html:'<img src="' + DATA_URI + '" width="22" height="22" style="display:block;filter:drop-shadow(0 0 2px rgba(0,0,0,.7))"/>',
+    className:'',iconSize:[22,22],iconAnchor:[11,11]
   });
 }
 function mkCrashIcon(){
