@@ -155,24 +155,24 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
     </div>
 
     <div id="legend">
-      <img src="data:image/png;base64," width="16" height="16" style="vertical-align:middle;margin-right:5px;filter:drop-shadow(0 0 1px rgba(0,0,0,.5))"/><strong>Nuclear Facilities</strong><br>
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23f5a800'/%3E%3Ccircle cx='50' cy='50' r='46' fill='none' stroke='%23111' stroke-width='4'/%3E%3Cpath fill='%23111' d='M%2057.0%2C37.9%20L%2071.0%2C13.6%20A%2042%2C42%200%200%2C0%2029.0%2C13.6%20L%2043.0%2C37.9%20A%2014%2C14%200%200%2C1%2057.0%2C37.9%20Z'/%3E%3Cpath fill='%23111' d='M%2036.0%2C50.0%20L%208.0%2C50.0%20A%2042%2C42%200%200%2C0%2029.0%2C86.4%20L%2043.0%2C62.1%20A%2014%2C14%200%200%2C1%2036.0%2C50.0%20Z'/%3E%3Cpath fill='%23111' d='M%2057.0%2C62.1%20L%2071.0%2C86.4%20A%2042%2C42%200%200%2C0%2092.0%2C50.0%20L%2064.0%2C50.0%20A%2014%2C14%200%200%2C1%2057.0%2C62.1%20Z'/%3E%3Ccircle cx='50' cy='50' r='13' fill='%23111'/%3E%3Ccircle cx='50' cy='50' r='6' fill='%23f5a800'/%3E%3C/svg%3E" width="16" height="16" style="vertical-align:middle;margin-right:5px;filter:drop-shadow(0 0 1px rgba(0,0,0,.5))"/><img src="Radiation_Icon.png" width="16" height="16" style="vertical-align:middle;margin-right:5px;"/><strong>Nuclear Facilities</strong><br>
       <br><strong>&#9733; UFO Crashes</strong>&nbsp;<span style="color:#333;font-size:9px">individual markers</span><br>
       <br><strong>&#9733; UFO Sightings</strong>&nbsp;<span id="ufo-legend-mode" style="color:#333;font-size:9px">heatmap</span><br>
       <span class="lg" style="background:linear-gradient(to right,#000828,#0044bb,#00aaff,#aae8ff)"></span>density<br>
-      <span class="mode-note" id="ufo-zoom-note">zoom ≥ 8 → auto-switches to pins</span>
+      <span class="mode-note" id="ufo-zoom-note">zoom &ge; 8 &rarr; auto-switches to pins</span>
       <br><strong>&#128062; Bigfoot Sightings</strong>&nbsp;<span id="bf-legend-mode" style="color:#333;font-size:9px">heatmap</span><br>
       <span class="lg" style="background:linear-gradient(to right,#1a0800,#7a3000,#C87D2F,#ffe8a0)"></span>density<br>
-      <span class="mode-note" id="bf-zoom-note">zoom ≥ 8 → auto-switches to pins</span>
+      <span class="mode-note" id="bf-zoom-note">zoom &ge; 8 &rarr; auto-switches to pins</span>
       <br><strong>&#127795; National Parks</strong>&nbsp;<span style="color:#333;font-size:9px">shaded zones</span><br>
-      <span style="display:inline-block;width:36px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle;background:rgba(45,122,45,.35);border:1px dashed #4aaa4a"></span>area ∝ acreage
+      <span style="display:inline-block;width:36px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle;background:rgba(45,122,45,.35);border:1px dashed #4aaa4a"></span>area &prop; acreage
     </div>
 
     <div id="stats">
       <strong>Up to <span id="yr2">1869</span></strong>
       <div class="st">&#9762; Nuclear: <span id="cnt-nuke">0</span></div>
       <div class="st">&#9733; UFO Crashes: <span id="cnt-crash">0</span></div>
-      <div class="st">&#9733; UFO Sightings: <span id="cnt-ufo">—</span></div>
-      <div class="st">&#128062; Bigfoot: <span id="cnt-bf">—</span></div>
+      <div class="st">&#9733; UFO Sightings: <span id="cnt-ufo">&mdash;</span></div>
+      <div class="st">&#128062; Bigfoot: <span id="cnt-bf">&mdash;</span></div>
       <div class="st">&#127795; Parks: <span id="cnt-parks">0</span></div>
       <div class="st" id="vis-note" style="margin-top:4px;font-size:9px;color:#222"></div>
     </div>
@@ -188,6 +188,9 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 // ═══════════════════════════════════════════════════════════════════════════════
 // CONFIGURATION
 // ═══════════════════════════════════════════════════════════════════════════════
+const NUKE_ICON_URI = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23f5a800'/%3E%3Ccircle cx='50' cy='50' r='46' fill='none' stroke='%23111' stroke-width='4'/%3E%3Cpath fill='%23111' d='M%2057.0%2C37.9%20L%2071.0%2C13.6%20A%2042%2C42%200%200%2C0%2029.0%2C13.6%20L%2043.0%2C37.9%20A%2014%2C14%200%200%2C1%2057.0%2C37.9%20Z'/%3E%3Cpath fill='%23111' d='M%2036.0%2C50.0%20L%208.0%2C50.0%20A%2042%2C42%200%200%2C0%2029.0%2C86.4%20L%2043.0%2C62.1%20A%2014%2C14%200%200%2C1%2036.0%2C50.0%20Z'/%3E%3Cpath fill='%23111' d='M%2057.0%2C62.1%20L%2071.0%2C86.4%20A%2042%2C42%200%200%2C0%2092.0%2C50.0%20L%2064.0%2C50.0%20A%2014%2C14%200%200%2C1%2057.0%2C62.1%20Z'/%3E%3Ccircle cx='50' cy='50' r='13' fill='%23111'/%3E%3Ccircle cx='50' cy='50' r='6' fill='%23f5a800'/%3E%3C/svg%3E";
+// Pre-built once — not reconstructed on every marker call
+const NUKE_ICON_HTML = '<img src="' + NUKE_ICON_URI + '" width="22" height="22" style="display:block;filter:drop-shadow(0 0 2px rgba(0,0,0,.7))"/>';
 const ZOOM_THRESHOLD = 8;   // Below this: heatmap. At/above: clustered pins
 const VIEWPORT_PAD   = 0.3; // Fraction of viewport to pad when culling markers
 const MAX_PINS_VIEWPORT = 2000; // Max individual markers rendered at once
@@ -241,7 +244,7 @@ function makeCluster(type){
       const size = count < 50 ? 28 : count < 200 ? 34 : 40;
       const cls = type === 'ufo' ? 'ufo-cluster-icon' : 'bf-cluster-icon';
       return L.divIcon({
-        html: '<div class="'+cls+'" style="width:'+size+'px;height:'+size+'px;font-size:'+(size<34?9:11)+'px">'+
+        html: '<div class="'+cls+'" style="width:'+size+'px;height:'+size+'px;font-size:'+(size<34?9:11)+'px">'+ 
               (count > 999 ? Math.round(count/1000)+'k' : count)+'</div>',
         className: '', iconSize: [size, size], iconAnchor: [size/2, size/2]
       });
@@ -257,7 +260,7 @@ const bfCluster  = makeCluster('bf');
 // ═══════════════════════════════════════════════════════════════════════════════
 function mkNukeIcon(color){
   return L.divIcon({
-    html:'<img src="' + DATA_URI + '" width="22" height="22" style="display:block;filter:drop-shadow(0 0 2px rgba(0,0,0,.7))"/>',
+    html:'<img src="Radiation_Icon.png" width="22" height="22" style="display:block"/>',
     className:'',iconSize:[22,22],iconAnchor:[11,11]
   });
 }
@@ -273,8 +276,6 @@ function mkCrashIcon(){
     className:'',iconSize:[24,24],iconAnchor:[12,12]
   });
 }
-// ── Park acreage lookup (acres → meters radius via √(acres*4047/π))
-// Real NPS data for all 63 parks; fallback 50,000 acres for unknown
 const PARK_ACRES = {
   "Acadia":49052,"American Samoa":13500,"Arches":76519,"Badlands":242756,
   "Big Bend":801163,"Biscayne":172971,"Black Canyon of the Gunnison":32950,
@@ -298,14 +299,11 @@ const PARK_ACRES = {
 };
 
 function parkAcresToRadius(name, acresFromData){
-  // Try data field first, then lookup table, then default
   let acres = acresFromData;
   if(!acres || isNaN(acres)){
-    // fuzzy match: check if any key is contained in the park name
     const key = Object.keys(PARK_ACRES).find(k => name && name.includes(k));
     acres = key ? PARK_ACRES[key] : 80000;
   }
-  // radius in meters = sqrt(acres * 4047 / π)
   return Math.sqrt(acres * 4047 / Math.PI);
 }
 
@@ -322,8 +320,6 @@ function mkParkZone(d){
     className: 'park-zone-path',
     interactive: true
   });
-
-  // Brighten on hover
   circle.on('mouseover', function(){
     this.setStyle({fillOpacity:0.32, opacity:0.9, weight:2});
     this.bringToFront();
@@ -331,22 +327,19 @@ function mkParkZone(d){
   circle.on('mouseout', function(){
     this.setStyle({fillOpacity:0.18, opacity:0.55, weight:1.5});
   });
-
   const acresFmt = (parkAcresToRadius(d.name, d.area_acres||d.area) > 0)
     ? Math.round(parkAcresToRadius(d.name,d.area_acres||d.area)**2*Math.PI/4047).toLocaleString()+' acres'
     : '—';
-
   circle.bindPopup(
     '<div class="popup-title">&#127795; '+d.name+'</div>'
     +'<div class="popup-field">State: <span>'+d.state+'</span></div>'
-    +(d.established?'<div class="popup-field">Established: <span>'+d.established+'</span></div>':'')
-    +'<div class="popup-field">Area: <span>'+(d.area_acres||d.area||'—')+'</span></div>'
+    +(d.established?'<div class="popup-field">Established: <span>'+d.established+'</span></div>':'')+
+    '<div class="popup-field">Area: <span>'+(d.area_acres||d.area||'—')+'</span></div>'
   ,{maxWidth:240});
   circle.bindTooltip('<b>'+d.name+'</b>', {direction:'center', permanent:false, opacity:0.9});
   return circle;
 }
 function mkUfoPin(shape){
-  const s = shape || 'circle';
   return L.divIcon({
     html:'<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10">'
         +'<circle cx="5" cy="5" r="4" fill="#0055cc" fill-opacity=".8" stroke="#4499ff" stroke-width=".8"/></svg>',
@@ -366,13 +359,9 @@ function mkBfPin(){
 // ═══════════════════════════════════════════════════════════════════════════════
 const ufoCache={}, bfCache={};
 const ufoLoaded=new Set(), bfLoaded=new Set();
-let ufoAllPts=[], bfAllPts=[];  // All loaded raw points [lat,lng,year] or {lat,lng,year,...}
-
-// Prebuilt Leaflet marker pools — created ONCE per point, reused
-// We don't pre-create 70k markers. Instead we build them per visible viewport
-// and cache the result by point index.
-const ufoMarkerPool = new Map(); // index -> L.marker
-const bfMarkerPool  = new Map(); // index -> L.marker
+let ufoAllPts=[], bfAllPts=[];
+const ufoMarkerPool = new Map();
+const bfMarkerPool  = new Map();
 
 function setLoader(msg, pct, sub){
   const el=document.getElementById('loader');
@@ -380,10 +369,8 @@ function setLoader(msg, pct, sub){
   el.classList.add('show');
   document.getElementById('loader-msg').textContent=msg;
   document.getElementById('loader-fill').style.width=pct+'%';
-  document.getElementById('loader-sub').textContent=sub||'';
-}
+  document.getElementById('loader-sub').textContent=sub||'';}
 
-// Fetch decade tiles for a given dataset
 async function loadDecades(prefix, cache, loaded, allPts, markerPool, mkIcon, popupFn, upToYear, label){
   const needed=[];
   for(let d=1860;d<=upToYear;d+=10) if(!loaded.has(d)) needed.push(d);
@@ -413,8 +400,6 @@ let showNuclear=true, showCrash=true, ufoMode='heat', bfMode='heat', showParks=t
 let playing=false, timer=null, currentYear=1869;
 let nukeMarkers=[], crashMarkers=[], parkMarkers=[];
 let staticReady=false;
-
-// Track what's currently in the cluster groups
 let ufoClusterPopulated=false, bfClusterPopulated=false;
 let lastUfoYear=-1, lastBfYear=-1;
 
@@ -431,7 +416,6 @@ async function loadStatic(){
   ]);
   setLoader('Building markers…',60);
 
-  // Nuclear
   nf.forEach(function(d){
     const col=NUKE_COLORS[d.type]||'#3B8BD4';
     const m=L.marker([d.lat,d.lng],{icon:mkNukeIcon(col)});
@@ -445,7 +429,6 @@ async function loadStatic(){
     nukeMarkers.push({m:m,year:d.year});
   });
 
-  // UFO Crashes
   cf.forEach(function(d){
     const m=L.marker([d.lat,d.lng],{icon:mkCrashIcon()});
     m.bindPopup(
@@ -457,14 +440,12 @@ async function loadStatic(){
     crashMarkers.push({m:m,year:d.year});
   });
 
-  // Parks — shaded circle zones sized by acreage
   pf.forEach(function(d){
     const zone = mkParkZone(d);
     parkMarkers.push(zone);
     if(showParks) zone.addTo(mainMap);
   });
 
-  // Cultural events
   window.EVENTS=evf;
   setLoader(null);
   staticReady=true;
@@ -472,7 +453,7 @@ async function loadStatic(){
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// VIEWPORT CULLING — only render markers visible on screen + padding
+// VIEWPORT CULLING
 // ═══════════════════════════════════════════════════════════════════════════════
 function getViewBounds(){
   const b=mainMap.getBounds();
@@ -484,7 +465,6 @@ function getViewBounds(){
   );
 }
 
-// Build or retrieve a cached Leaflet marker for a UFO point
 function getUfoMarker(idx, pt){
   if(ufoMarkerPool.has(idx)) return ufoMarkerPool.get(idx);
   const lat=Array.isArray(pt)?pt[0]:pt.lat;
@@ -497,30 +477,28 @@ function getUfoMarker(idx, pt){
   m.bindPopup(
     '<div class="popup-title">&#9733; UFO Sighting</div>'
     +'<div class="popup-field">Year: <span>'+year+'</span></div>'
-    +(shape?'<div class="popup-field">Shape: <span>'+shape+'</span></div>':'')
-    +(duration?'<div class="popup-field">Duration: <span>'+duration+'</span></div>':'')
-    +(desc?'<div class="popup-detail">'+desc.substring(0,200)+(desc.length>200?'…':'')+'</div>':'')
+    +(shape?'<div class="popup-field">Shape: <span>'+shape+'</span></div>':'')+
+    (duration?'<div class="popup-field">Duration: <span>'+duration+'</span></div>':'')+
+    (desc?'<div class="popup-detail">'+desc.substring(0,200)+(desc.length>200?'\u2026':'')+'</div>':'')+''
   ,{maxWidth:280});
   ufoMarkerPool.set(idx,m);
   return m;
 }
 
-// Build or retrieve a cached Leaflet marker for a Bigfoot point
 function getBfMarker(idx, pt){
   if(bfMarkerPool.has(idx)) return bfMarkerPool.get(idx);
   const m=L.marker([pt.lat,pt.lng],{icon:mkBfPin(),riseOnHover:true});
   m.bindPopup(
     '<div class="popup-title">&#128062; Bigfoot Sighting</div>'
     +'<div class="popup-field">Year: <span>'+pt.year+'</span></div>'
-    +'<div class="popup-field">Location: <span>'+pt.county+', '+pt.state+'</span></div>'
+    +'<div class="popup-field">Location: <span>'+(pt.county||pt.city)+', '+pt.state+'</span></div>'
     +'<div class="popup-field">Classification: <span>'+pt.cls+'</span></div>'
   ,{maxWidth:280});
-  m.bindTooltip(pt.county+', '+pt.state+' ('+pt.year+')',{direction:'top'});
+  m.bindTooltip((pt.county||pt.city)+', '+pt.state+' ('+pt.year+')',{direction:'top'});
   bfMarkerPool.set(idx,m);
   return m;
 }
 
-// Populate cluster group with viewport-visible points for the current year
 function repopulateCluster(cluster, allPts, markerFn, year, label){
   cluster.clearLayers();
   const bounds=getViewBounds();
@@ -565,10 +543,8 @@ async function update(year){
   document.getElementById('yr2').textContent=year;
   updateSidebar(year);
   if(!staticReady) return;
-
   const zoom=mainMap.getZoom();
 
-  // ── Nuclear
   let nCount=0;
   nukeMarkers.forEach(function(item){
     const want=item.year<=year&&showNuclear;
@@ -577,7 +553,6 @@ async function update(year){
   });
   document.getElementById('cnt-nuke').textContent=nCount;
 
-  // ── UFO Crashes
   let cCount=0;
   crashMarkers.forEach(function(item){
     const want=item.year<=year&&showCrash;
@@ -586,7 +561,6 @@ async function update(year){
   });
   document.getElementById('cnt-crash').textContent=cCount;
 
-  // ── Parks
   let pCount=0;
   parkMarkers.forEach(function(m){
     if(showParks){if(!mainMap.hasLayer(m))m.addTo(mainMap);pCount++;}
@@ -594,11 +568,10 @@ async function update(year){
   });
   document.getElementById('cnt-parks').textContent=showParks?pCount:0;
 
-  // ── UFO Sightings
   if(ufoMode==='off'){
     if(mainMap.hasLayer(ufoHeat)) mainMap.removeLayer(ufoHeat);
     if(mainMap.hasLayer(ufoCluster)) mainMap.removeLayer(ufoCluster);
-    document.getElementById('cnt-ufo').textContent='—';
+    document.getElementById('cnt-ufo').textContent='\u2014';
     document.getElementById('ufo-legend-mode').textContent='off';
     document.getElementById('ufo-zoom-note').textContent='';
   } else if(ufoMode==='heat' && zoom < ZOOM_THRESHOLD){
@@ -612,7 +585,6 @@ async function update(year){
     document.getElementById('ufo-legend-mode').textContent='heatmap';
     document.getElementById('ufo-zoom-note').textContent='zoom ≥ '+ZOOM_THRESHOLD+' → auto-switches to pins';
   } else {
-    // Dot/pin mode OR heat at high zoom → use clusters
     if(mainMap.hasLayer(ufoHeat)) mainMap.removeLayer(ufoHeat);
     if(!mainMap.hasLayer(ufoCluster)) mainMap.addLayer(ufoCluster);
     await loadDecades('ufo_sightings',ufoCache,ufoLoaded,ufoAllPts,null,null,null,year,'UFO');
@@ -623,11 +595,10 @@ async function update(year){
     document.getElementById('vis-note').textContent='';
   }
 
-  // ── Bigfoot
   if(bfMode==='off'){
     if(mainMap.hasLayer(bfHeat)) mainMap.removeLayer(bfHeat);
     if(mainMap.hasLayer(bfCluster)) mainMap.removeLayer(bfCluster);
-    document.getElementById('cnt-bf').textContent='—';
+    document.getElementById('cnt-bf').textContent='\u2014';
     document.getElementById('bf-legend-mode').textContent='off';
     document.getElementById('bf-zoom-note').textContent='';
   } else if(bfMode==='heat' && zoom < ZOOM_THRESHOLD){
@@ -705,7 +676,7 @@ function setMode(layer,mode){
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// MAP EVENTS — re-render when panning/zooming (viewport culling)
+// MAP EVENTS
 // ═══════════════════════════════════════════════════════════════════════════════
 let moveDebounce=null;
 mainMap.on('moveend zoomend', function(){
@@ -715,13 +686,11 @@ mainMap.on('moveend zoomend', function(){
   }, 200);
 });
 
-// Auto-switch heat ↔ pins at zoom threshold
 mainMap.on('zoomend', function(){
   updateZoomHint();
-  // If in heat mode and crossed above threshold, switch to pins automatically
   const z=mainMap.getZoom();
   let changed=false;
-  if(ufoMode==='heat' && z>=ZOOM_THRESHOLD){ /* keep mode but update() will use cluster */ changed=true; }
+  if(ufoMode==='heat' && z>=ZOOM_THRESHOLD){ changed=true; }
   if(bfMode==='heat' && z>=ZOOM_THRESHOLD){ changed=true; }
   if(changed) update(currentYear);
 });
