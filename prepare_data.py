@@ -71,11 +71,15 @@ ufo = ufo[ufo['year'] > 0]
 decades = defaultdict(list)
 for _, r in ufo.iterrows():
     decade = (int(r['year']) // 10) * 10
-    decades[decade].append([
-        round(float(r['Latitude']),  2),
-        round(float(r['Longitude']), 2),
-        int(r['year'])
-    ])
+    decades[decade].append({
+        "lat":      round(float(r['Latitude']),  2),
+        "lng":      round(float(r['Longitude']), 2),
+        "year":     int(r['year']),
+        "city":     str(r['City'])     if pd.notna(r['City'])           else '',
+        "state":    str(r['State'])    if pd.notna(r['State'])          else '',
+        "shape":    str(r['Shape'])    if pd.notna(r['Shape'])          else '',
+        "duration": str(r['Duration (sec)']) if pd.notna(r['Duration (sec)']) else '',
+    })
 
 for decade, records in sorted(decades.items()):
     write_json(f"data/ufo_sightings/{decade}.json", records)

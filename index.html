@@ -17,20 +17,20 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 
 /* ── Controls bar ─────────────────────────────────────── */
 #controls{display:flex;align-items:center;gap:9px;padding:7px 12px;background:#080808;border-bottom:1px solid #1a1a1a;flex-wrap:wrap;flex-shrink:0}
-#title{font-size:11px;font-weight:bold;letter-spacing:2px;color:#444;white-space:nowrap}
+#title{font-size:11px;font-weight:bold;letter-spacing:2px;color:#ffffff;white-space:nowrap}
 #year-lbl{font-size:22px;font-weight:bold;min-width:50px;color:#fff;font-variant-numeric:tabular-nums}
 #slider-wrap{flex:1;min-width:180px;display:flex;flex-direction:column;gap:2px}
 #slider{width:100%;accent-color:#3B8BD4;cursor:pointer}
-.ticks{display:flex;justify-content:space-between;font-size:9px;color:#2a2a2a}
+.ticks{display:flex;justify-content:space-between;font-size:9px;color:#ffffff}
 .btn-group{display:flex;border:1px solid #222;border-radius:4px;overflow:hidden}
-.btn-group label{font-size:9px;color:#444;padding:0 5px;line-height:26px;white-space:nowrap;background:#0e0e0e}
-.gbtn{background:transparent;border:none;border-left:1px solid #222;color:#444;font-family:inherit;font-size:10px;padding:3px 7px;cursor:pointer;white-space:nowrap;transition:all .15s}
+.btn-group label{font-size:9px;color:#ffffff;padding:0 5px;line-height:26px;white-space:nowrap;background:#0e0e0e}
+.gbtn{background:transparent;border:none;border-left:1px solid #222;color:#ffffff;font-family:inherit;font-size:10px;padding:3px 7px;cursor:pointer;white-space:nowrap;transition:all .15s}
 .gbtn:hover{background:#181818;color:#fff}
 .gbtn.on{background:#0f2540;color:#7ecfff}
 .gbtn.on-heat{background:#1a0f30;color:#b388ff}
 .gbtn.on-dot{background:#0f2540;color:#7ecfff}
 .gbtn.on-green{background:#0d1f10;color:#6fcf6f}
-.sbtn{background:transparent;border:1px solid #222;border-radius:4px;color:#444;font-family:inherit;font-size:10px;padding:3px 8px;cursor:pointer;transition:all .15s}
+.sbtn{background:transparent;border:1px solid #222;border-radius:4px;color:#ffffff;font-family:inherit;font-size:10px;padding:3px 8px;cursor:pointer;transition:all .15s}
 .sbtn:hover{background:#181818;color:#fff}
 .sbtn.on{background:#0f2540;border-color:#3B8BD4;color:#7ecfff}
 
@@ -41,15 +41,15 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 .leaflet-container{background:#151515!important}
 
 /* ── Sidebar ──────────────────────────────────────────── */
-#sidebar{width:220px;flex-shrink:0;background:#080808;border-left:1px solid #1a1a1a;display:flex;flex-direction:column;overflow:hidden}
-#sidebar-header{padding:8px 10px;border-bottom:1px solid #1a1a1a;font-size:10px;letter-spacing:1px;color:#333;flex-shrink:0}
+#sidebar{position:absolute;bottom:10px;right:10px;z-index:900;width:200px;max-height:380px;background:rgba(6,6,6,.96);border:1px solid #1a1a1a;border-radius:6px;display:flex;flex-direction:column;overflow:hidden}
+#sidebar-header{padding:8px 10px;border-bottom:1px solid #1a1a1a;font-size:10px;letter-spacing:1px;color:#ffffff;flex-shrink:0}
 #sidebar-content{flex:1;overflow-y:auto;padding:6px 0}
 #sidebar-content::-webkit-scrollbar{width:3px}
 #sidebar-content::-webkit-scrollbar-thumb{background:#222}
 .ev-item{padding:6px 10px;border-bottom:1px solid #0f0f0f;cursor:default;transition:background .1s}
 .ev-item:hover{background:#0f0f0f}
-.ev-year{font-size:9px;color:#333;margin-bottom:2px}
-.ev-title{font-size:11px;color:#999;line-height:1.3}
+.ev-year{font-size:9px;color:#ffffff;margin-bottom:2px}
+.ev-title{font-size:11px;color:#ffffff;line-height:1.3}
 .ev-cat{display:inline-block;font-size:9px;padding:1px 4px;border-radius:2px;margin-top:2px}
 .cat-uf{background:#001833;color:#4499dd}
 .cat-bf{background:#1a0a00;color:#aa6622}
@@ -69,16 +69,16 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 
 /* ── Legend ───────────────────────────────────────────── */
 #legend{position:absolute;bottom:10px;left:10px;z-index:900;background:rgba(6,6,6,.96);border:1px solid #1a1a1a;border-radius:6px;padding:9px 11px;font-size:10px;line-height:1.85;pointer-events:none;min-width:195px}
-#legend strong{font-size:11px;color:#ccc}
+#legend strong{font-size:11px;color:#ffffff}
 .ld{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:middle}
 .lg{display:inline-block;width:36px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle}
-#legend .mode-note{font-size:9px;color:#333;display:block;margin-top:2px;padding-left:2px}
+#legend .mode-note{font-size:9px;color:#ffffff;display:block;margin-top:2px;padding-left:2px}
 
 /* ── Stats ────────────────────────────────────────────── */
 #stats{position:absolute;top:10px;right:10px;z-index:900;background:rgba(6,6,6,.94);border:1px solid #1a1a1a;border-radius:6px;padding:7px 11px;font-size:10px;min-width:190px}
-#stats strong{color:#ccc;display:block;margin-bottom:3px;font-size:11px}
-.st{color:#333;padding:1px 0;display:flex;justify-content:space-between;gap:8px}
-.st span{color:#aaa;font-weight:bold}
+#stats strong{color:#ffffff;display:block;margin-bottom:3px;font-size:11px}
+.st{color:#ffffff;padding:1px 0;display:flex;justify-content:space-between;gap:8px}
+.st span{color:#ffffff;font-weight:bold}
 
 /* ── Cluster customization ────────────────────────────── */
 .marker-cluster-small,.marker-cluster-medium,.marker-cluster-large{background:none!important}
@@ -105,12 +105,12 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 
 <div id="controls">
   <span id="title">// US PHENOMENA</span>
-  <span id="year-lbl">1869</span>
+  <span id="year-lbl">1910</span>
   <div id="slider-wrap">
-    <input type="range" id="slider" min="1869" max="2019" value="1869" step="1"/>
+    <input type="range" id="slider" min="1910" max="2014" value="1910" step="1"/>
     <div class="ticks">
-      <span>1869</span><span>1890</span><span>1910</span><span>1930</span>
-      <span>1950</span><span>1970</span><span>1990</span><span>2010</span><span>2019</span>
+      <span>1910</span><span>1920</span><span>1930</span><span>1940</span><span>1950</span>
+      <span>1960</span><span>1970</span><span>1980</span><span>1990</span><span>2000</span><span>2010</span><span>2014</span>
     </div>
   </div>
   <button class="sbtn" id="play-btn">&#9654; Play</button>
@@ -155,32 +155,30 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
     </div>
 
     <div id="legend">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23f5a800'/%3E%3Ccircle cx='50' cy='50' r='46' fill='none' stroke='%23111' stroke-width='4'/%3E%3Cpath fill='%23111' d='M%2057.0%2C37.9%20L%2071.0%2C13.6%20A%2042%2C42%200%200%2C0%2029.0%2C13.6%20L%2043.0%2C37.9%20A%2014%2C14%200%200%2C1%2057.0%2C37.9%20Z'/%3E%3Cpath fill='%23111' d='M%2036.0%2C50.0%20L%208.0%2C50.0%20A%2042%2C42%200%200%2C0%2029.0%2C86.4%20L%2043.0%2C62.1%20A%2014%2C14%200%200%2C1%2036.0%2C50.0%20Z'/%3E%3Cpath fill='%23111' d='M%2057.0%2C62.1%20L%2071.0%2C86.4%20A%2042%2C42%200%200%2C0%2092.0%2C50.0%20L%2064.0%2C50.0%20A%2014%2C14%200%200%2C1%2057.0%2C62.1%20Z'/%3E%3Ccircle cx='50' cy='50' r='13' fill='%23111'/%3E%3Ccircle cx='50' cy='50' r='6' fill='%23f5a800'/%3E%3C/svg%3E" width="16" height="16" style="vertical-align:middle;margin-right:5px;filter:drop-shadow(0 0 1px rgba(0,0,0,.5))"/><img src="Radiation_Icon.png" width="16" height="16" style="vertical-align:middle;margin-right:5px;"/><strong>Nuclear Facilities</strong><br>
-      <br><strong>&#9733; UFO Crashes</strong>&nbsp;<span style="color:#333;font-size:9px">individual markers</span><br>
-      <br><strong>&#9733; UFO Sightings</strong>&nbsp;<span id="ufo-legend-mode" style="color:#333;font-size:9px">heatmap</span><br>
+            <img src="Radiation_Icon.png" width="16" height="16" style="vertical-align:middle;margin-right:5px;"/><strong>Nuclear Facilities</strong><br>
+      <br><strong><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:3px"><circle cx="12" cy="12" r="8" fill="none" stroke="#63C55A" stroke-width="1" opacity=".5"/><circle cx="12" cy="12" r="4" fill="#63C55A" fill-opacity=".9" stroke="#fff" stroke-width="1"/><line x1="12" y1="2" x2="12" y2="6" stroke="#63C55A" stroke-width="1.5"/><line x1="18" y1="12" x2="22" y2="12" stroke="#63C55A" stroke-width="1.5"/><line x1="2" y1="12" x2="6" y2="12" stroke="#63C55A" stroke-width="1.5"/><line x1="12" y1="18" x2="12" y2="22" stroke="#63C55A" stroke-width="1.5"/></svg>UFO Crashes</strong>&nbsp;<span style="color:#ffffff;font-size:9px">individual markers</span><br>
+      <br><strong>&#9733; UFO Sightings</strong>&nbsp;<span id="ufo-legend-mode" style="color:#ffffff;font-size:9px">heatmap</span><br>
       <span class="lg" style="background:linear-gradient(to right,#000828,#0044bb,#00aaff,#aae8ff)"></span>density<br>
-      <span class="mode-note" id="ufo-zoom-note">zoom &ge; 8 &rarr; auto-switches to pins</span>
-      <br><strong>&#128062; Bigfoot Sightings</strong>&nbsp;<span id="bf-legend-mode" style="color:#333;font-size:9px">heatmap</span><br>
+      <br><strong>&#128062; Bigfoot Sightings</strong>&nbsp;<span id="bf-legend-mode" style="color:#ffffff;font-size:9px">heatmap</span><br>
       <span class="lg" style="background:linear-gradient(to right,#1a0800,#7a3000,#C87D2F,#ffe8a0)"></span>density<br>
-      <span class="mode-note" id="bf-zoom-note">zoom &ge; 8 &rarr; auto-switches to pins</span>
-      <br><strong>&#127795; National Parks</strong>&nbsp;<span style="color:#333;font-size:9px">shaded zones</span><br>
+      <br><strong>&#127795; National Parks</strong>&nbsp;<span style="color:#ffffff;font-size:9px">shaded zones</span><br>
       <span style="display:inline-block;width:36px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle;background:rgba(45,122,45,.35);border:1px dashed #4aaa4a"></span>area &prop; acreage
     </div>
 
     <div id="stats">
-      <strong>Up to <span id="yr2">1869</span></strong>
+      <strong>Up to <span id="yr2">1910</span></strong>
       <div class="st">&#9762; Nuclear: <span id="cnt-nuke">0</span></div>
       <div class="st">&#9733; UFO Crashes: <span id="cnt-crash">0</span></div>
       <div class="st">&#9733; UFO Sightings: <span id="cnt-ufo">&mdash;</span></div>
       <div class="st">&#128062; Bigfoot: <span id="cnt-bf">&mdash;</span></div>
-      <div class="st">&#127795; Parks: <span id="cnt-parks">0</span></div>
+      <div class="st">&#127795; National Parks: <span id="cnt-parks">0</span></div>
       <div class="st" id="vis-note" style="margin-top:4px;font-size:9px;color:#222"></div>
     </div>
-  </div>
 
-  <div id="sidebar">
-    <div id="sidebar-header">// CULTURAL EVENTS</div>
-    <div id="sidebar-content"></div>
+    <div id="sidebar">
+      <div id="sidebar-header">// CULTURAL EVENTS</div>
+      <div id="sidebar-content"></div>
+    </div>
   </div>
 </div>
 
@@ -210,8 +208,10 @@ const CAT_COLORS = {
 // ═══════════════════════════════════════════════════════════════════════════════
 const mainMap = L.map('map',{
   center:[39.5,-98.35],zoom:4,minZoom:3,maxZoom:14,
-  maxBounds:L.latLngBounds([[15,-170],[72,-50]]),maxBoundsViscosity:0.9
+  maxBounds:L.latLngBounds([[15,-170],[72,-50]]),maxBoundsViscosity:0.9,
+  zoomControl:false
 });
+L.control.zoom({position:'topleft'}).addTo(mainMap);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
   {maxZoom:19,attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(mainMap);
 mainMap.fitBounds([[24,-125],[50,-66]]);
@@ -236,7 +236,8 @@ const bfHeat = L.heatLayer([],{
 function makeCluster(type){
   return L.markerClusterGroup({
     maxClusterRadius: 60,
-    disableClusteringAtZoom: 12,
+    spiderfyOnMaxZoom: true,
+    spiderfyDistanceMultiplier: 2,
     chunkedLoading: true,
     chunkDelay: 50,
     iconCreateFunction: function(cluster){
@@ -373,7 +374,7 @@ function setLoader(msg, pct, sub){
 
 async function loadDecades(prefix, cache, loaded, allPts, markerPool, mkIcon, popupFn, upToYear, label){
   const needed=[];
-  for(let d=1860;d<=upToYear;d+=10) if(!loaded.has(d)) needed.push(d);
+  for(let d=1910;d<=upToYear;d+=10) if(!loaded.has(d)) needed.push(d);
   if(!needed.length) return;
   setLoader('Loading '+label+' data…',5,'Fetching '+needed.length+' decade file(s)');
   for(let i=0;i<needed.length;i++){
@@ -397,7 +398,7 @@ async function loadDecades(prefix, cache, loaded, allPts, markerPool, mkIcon, po
 // STATE
 // ═══════════════════════════════════════════════════════════════════════════════
 let showNuclear=true, showCrash=true, ufoMode='heat', bfMode='heat', showParks=true;
-let playing=false, timer=null, currentYear=1869;
+let playing=false, timer=null, currentYear=1910;
 let nukeMarkers=[], crashMarkers=[], parkMarkers=[];
 let staticReady=false;
 let ufoClusterPopulated=false, bfClusterPopulated=false;
@@ -470,16 +471,17 @@ function getUfoMarker(idx, pt){
   const lat=Array.isArray(pt)?pt[0]:pt.lat;
   const lng=Array.isArray(pt)?pt[1]:pt.lng;
   const year=Array.isArray(pt)?pt[2]:pt.year;
+  const city=pt.city||'';
+  const state=pt.state||'';
   const shape=pt.shape||'';
   const duration=pt.duration||'';
-  const desc=pt.description||pt.desc||'';
   const m=L.marker([lat,lng],{icon:mkUfoPin(),riseOnHover:true});
   m.bindPopup(
     '<div class="popup-title">&#9733; UFO Sighting</div>'
     +'<div class="popup-field">Year: <span>'+year+'</span></div>'
-    +(shape?'<div class="popup-field">Shape: <span>'+shape+'</span></div>':'')+
-    (duration?'<div class="popup-field">Duration: <span>'+duration+'</span></div>':'')+
-    (desc?'<div class="popup-detail">'+desc.substring(0,200)+(desc.length>200?'\u2026':'')+'</div>':'')+''
+    +((city||state)?'<div class="popup-field">Location: <span>'+(city&&state?city+', '+state:city||state)+'</span></div>':'')+
+    (shape?'<div class="popup-field">Shape: <span>'+shape+'</span></div>':'')+
+    (duration?'<div class="popup-field">Duration: <span>'+duration+' sec</span></div>':'')
   ,{maxWidth:280});
   ufoMarkerPool.set(idx,m);
   return m;
@@ -573,7 +575,6 @@ async function update(year){
     if(mainMap.hasLayer(ufoCluster)) mainMap.removeLayer(ufoCluster);
     document.getElementById('cnt-ufo').textContent='\u2014';
     document.getElementById('ufo-legend-mode').textContent='off';
-    document.getElementById('ufo-zoom-note').textContent='';
   } else if(ufoMode==='heat' && zoom < ZOOM_THRESHOLD){
     if(mainMap.hasLayer(ufoCluster)) mainMap.removeLayer(ufoCluster);
     if(!mainMap.hasLayer(ufoHeat)) mainMap.addLayer(ufoHeat);
@@ -583,7 +584,6 @@ async function update(year){
     ufoHeat.setLatLngs(pts);
     document.getElementById('cnt-ufo').textContent=pts.length.toLocaleString();
     document.getElementById('ufo-legend-mode').textContent='heatmap';
-    document.getElementById('ufo-zoom-note').textContent='zoom ≥ '+ZOOM_THRESHOLD+' → auto-switches to pins';
   } else {
     if(mainMap.hasLayer(ufoHeat)) mainMap.removeLayer(ufoHeat);
     if(!mainMap.hasLayer(ufoCluster)) mainMap.addLayer(ufoCluster);
@@ -591,7 +591,6 @@ async function update(year){
     const r=repopulateCluster(ufoCluster, ufoAllPts, getUfoMarker, year, 'UFO');
     document.getElementById('cnt-ufo').textContent=r.total.toLocaleString()+' total';
     document.getElementById('ufo-legend-mode').textContent='pins + clusters';
-    document.getElementById('ufo-zoom-note').textContent='showing '+r.visible.toLocaleString()+' in view';
     document.getElementById('vis-note').textContent='';
   }
 
@@ -600,7 +599,6 @@ async function update(year){
     if(mainMap.hasLayer(bfCluster)) mainMap.removeLayer(bfCluster);
     document.getElementById('cnt-bf').textContent='\u2014';
     document.getElementById('bf-legend-mode').textContent='off';
-    document.getElementById('bf-zoom-note').textContent='';
   } else if(bfMode==='heat' && zoom < ZOOM_THRESHOLD){
     if(mainMap.hasLayer(bfCluster)) mainMap.removeLayer(bfCluster);
     if(!mainMap.hasLayer(bfHeat)) mainMap.addLayer(bfHeat);
@@ -610,7 +608,6 @@ async function update(year){
     bfHeat.setLatLngs(bfPts);
     document.getElementById('cnt-bf').textContent=bfPts.length.toLocaleString();
     document.getElementById('bf-legend-mode').textContent='heatmap';
-    document.getElementById('bf-zoom-note').textContent='zoom ≥ '+ZOOM_THRESHOLD+' → auto-switches to pins';
   } else {
     if(mainMap.hasLayer(bfHeat)) mainMap.removeLayer(bfHeat);
     if(!mainMap.hasLayer(bfCluster)) mainMap.addLayer(bfCluster);
@@ -618,7 +615,6 @@ async function update(year){
     const r=repopulateCluster(bfCluster, bfAllPts, getBfMarker, year, 'Bigfoot');
     document.getElementById('cnt-bf').textContent=r.total.toLocaleString()+' total';
     document.getElementById('bf-legend-mode').textContent='pins + clusters';
-    document.getElementById('bf-zoom-note').textContent='showing '+r.visible.toLocaleString()+' in view';
   }
 
   updateZoomHint();
@@ -702,15 +698,15 @@ const slider=document.getElementById('slider');
 slider.addEventListener('input',function(){ update(+this.value); });
 
 function stopPlay(){playing=false;clearInterval(timer);document.getElementById('play-btn').innerHTML='&#9654; Play';}
-function doReset(){stopPlay();slider.value=1869;update(1869);}
+function doReset(){stopPlay();slider.value=1910;update(1910);}
 
 document.getElementById('play-btn').addEventListener('click',function(){
   if(playing){stopPlay();return;}
-  if(+slider.value>=2019){doReset();return;}
+  if(+slider.value>=2014){doReset();return;}
   playing=true;this.innerHTML='&#9646;&#9646; Stop';
   timer=setInterval(function(){
     const n=+slider.value+1;
-    if(n>2019){stopPlay();return;}
+    if(n>2014){stopPlay();return;}
     slider.value=n;update(n);
   },80);
 });

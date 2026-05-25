@@ -1,1 +1,1 @@
-[[40.12,-86.01,1920],[41.42,-90.02,1925],[43.64,-118.63,1929]]
+[{"lat":40.12,"lng":-86.01,"year":1920,"city":"Cicero","state":"IN","shape":"Undefined","duration":"60.0"},{"lat":41.42,"lng":-90.02,"year":1925,"city":"Atkinson","state":"IL","shape":"Disk","duration":"60.0"},{"lat":43.64,"lng":-118.63,"year":1929,"city":"Buchanan","state":"OR","shape":"Disk","duration":"60.0"}]
