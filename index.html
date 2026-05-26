@@ -16,13 +16,16 @@
 body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:flex;flex-direction:column;height:100vh;overflow:hidden}
 
 /* ── Controls bar ─────────────────────────────────────── */
-#controls{display:flex;align-items:center;gap:9px;padding:7px 12px;background:#080808;border-bottom:1px solid #1a1a1a;flex-wrap:wrap;flex-shrink:0}
+#controls{display:flex;flex-direction:column;padding:7px 12px;background:#080808;border-top:1px solid #1a1a1a;flex-shrink:0;gap:6px}
+#controls-title{text-align:center;font-size:17px;font-weight:bold;color:#ffffff;letter-spacing:1px;width:100%}
+#controls-row1{display:flex;align-items:center;gap:9px;width:100%}
+#controls-row2{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:center}
 #title{font-size:11px;font-weight:bold;letter-spacing:2px;color:#ffffff;white-space:nowrap}
 #year-lbl{font-size:22px;font-weight:bold;min-width:50px;color:#fff;font-variant-numeric:tabular-nums}
 #slider-wrap{flex:1;min-width:180px;display:flex;flex-direction:column;gap:2px}
 #slider{width:100%;accent-color:#3B8BD4;cursor:pointer}
 .ticks{display:flex;justify-content:space-between;font-size:9px;color:#ffffff}
-.btn-group{display:flex;border:1px solid #222;border-radius:4px;overflow:hidden}
+.btn-group{display:flex;border:1px solid #ffffff;border-radius:4px;overflow:hidden}
 .btn-group label{font-size:9px;color:#ffffff;padding:0 5px;line-height:26px;white-space:nowrap;background:#0e0e0e}
 .gbtn{background:transparent;border:none;border-left:1px solid #222;color:#ffffff;font-family:inherit;font-size:10px;padding:3px 7px;cursor:pointer;white-space:nowrap;transition:all .15s}
 .gbtn:hover{background:#181818;color:#fff}
@@ -41,7 +44,7 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 .leaflet-container{background:#151515!important}
 
 /* ── Sidebar ──────────────────────────────────────────── */
-#sidebar{position:absolute;bottom:10px;right:10px;z-index:900;width:200px;max-height:380px;background:rgba(6,6,6,.96);border:1px solid #1a1a1a;border-radius:6px;display:flex;flex-direction:column;overflow:hidden}
+#sidebar{position:absolute;bottom:10px;right:10px;z-index:900;width:220px;max-height:380px;background:rgba(6,6,6,.96);border:1px solid #ffffff;border-radius:6px;display:flex;flex-direction:column;overflow:hidden}
 #sidebar-header{padding:8px 10px;border-bottom:1px solid #1a1a1a;font-size:10px;letter-spacing:1px;color:#ffffff;flex-shrink:0}
 #sidebar-content{flex:1;overflow-y:auto;padding:6px 0}
 #sidebar-content::-webkit-scrollbar{width:3px}
@@ -68,14 +71,14 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 #loader-sub{font-size:9px;color:#333;margin-top:4px}
 
 /* ── Legend ───────────────────────────────────────────── */
-#legend{position:absolute;bottom:10px;left:10px;z-index:900;background:rgba(6,6,6,.96);border:1px solid #1a1a1a;border-radius:6px;padding:9px 11px;font-size:10px;line-height:1.85;pointer-events:none;min-width:195px}
+#legend{position:absolute;bottom:10px;left:10px;z-index:900;background:rgba(6,6,6,.96);border:1px solid #ffffff;border-radius:6px;padding:9px 11px;font-size:10px;line-height:1.85;pointer-events:none;min-width:195px}
 #legend strong{font-size:11px;color:#ffffff}
 .ld{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:middle}
 .lg{display:inline-block;width:36px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle}
 #legend .mode-note{font-size:9px;color:#ffffff;display:block;margin-top:2px;padding-left:2px}
 
 /* ── Stats ────────────────────────────────────────────── */
-#stats{position:absolute;top:10px;right:10px;z-index:900;background:rgba(6,6,6,.94);border:1px solid #1a1a1a;border-radius:6px;padding:7px 11px;font-size:10px;min-width:190px}
+#stats{position:absolute;top:10px;right:10px;z-index:900;background:rgba(6,6,6,.94);border:1px solid #ffffff;border-radius:6px;padding:7px 11px;font-size:10px;width:220px}
 #stats strong{color:#ffffff;display:block;margin-bottom:3px;font-size:11px}
 .st{color:#ffffff;padding:1px 0;display:flex;justify-content:space-between;gap:8px}
 .st span{color:#ffffff;font-weight:bold}
@@ -104,41 +107,44 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 <body>
 
 <div id="controls">
-  <span id="title">// US PHENOMENA</span>
-  <span id="year-lbl">1910</span>
-  <div id="slider-wrap">
-    <input type="range" id="slider" min="1910" max="2014" value="1910" step="1"/>
-    <div class="ticks">
-      <span>1910</span><span>1920</span><span>1930</span><span>1940</span><span>1950</span>
-      <span>1960</span><span>1970</span><span>1980</span><span>1990</span><span>2000</span><span>2010</span><span>2014</span>
+  <div id="controls-title">US Paranormal Phenomena: UFO and Bigfoot Sightings from 1910 to 2014</div>
+  <div id="controls-row1">
+    <span id="year-lbl">1910</span>
+    <div id="slider-wrap">
+      <input type="range" id="slider" min="1910" max="2014" value="1910" step="1"/>
+      <div class="ticks">
+        <span>1910</span><span>1920</span><span>1930</span><span>1940</span><span>1950</span>
+        <span>1960</span><span>1970</span><span>1980</span><span>1990</span><span>2000</span><span>2010</span><span>2014</span>
+      </div>
     </div>
+    <button class="sbtn" id="play-btn">&#9654; Play</button>
+    <button class="sbtn" onclick="doReset()">&#8635;</button>
   </div>
-  <button class="sbtn" id="play-btn">&#9654; Play</button>
-  <button class="sbtn" onclick="doReset()">&#8635;</button>
-
-  <div class="btn-group">
-    <label>&#9762; Nuclear</label>
-    <button class="gbtn on" id="nuke-btn" onclick="toggle('nuclear')">On</button>
-  </div>
-  <div class="btn-group">
-    <label>&#9733; UFO Crashes</label>
-    <button class="gbtn on" id="crash-btn" onclick="toggle('crash')">On</button>
-  </div>
-  <div class="btn-group">
-    <label>&#9733; UFO Sightings</label>
-    <button class="gbtn" id="ufos-off" onclick="setMode('ufo','off')">Off</button>
-    <button class="gbtn on-heat" id="ufos-heat" onclick="setMode('ufo','heat')">Heat</button>
-    <button class="gbtn" id="ufos-dot" onclick="setMode('ufo','dot')">Pins</button>
-  </div>
-  <div class="btn-group">
-    <label>&#128062; Bigfoot</label>
-    <button class="gbtn" id="bf-off" onclick="setMode('bf','off')">Off</button>
-    <button class="gbtn on-heat" id="bf-heat" onclick="setMode('bf','heat')">Heat</button>
-    <button class="gbtn" id="bf-dot" onclick="setMode('bf','dot')">Pins</button>
-  </div>
-  <div class="btn-group">
-    <label>&#127795; Parks</label>
-    <button class="gbtn on-green" id="parks-btn" onclick="toggle('parks')">On</button>
+  <div id="controls-row2">
+    <div class="btn-group">
+      <label>&#9762; Nuclear</label>
+      <button class="gbtn on" id="nuke-btn" onclick="toggle('nuclear')">On</button>
+    </div>
+    <div class="btn-group">
+      <label>&#9733; UFO Crashes</label>
+      <button class="gbtn on" id="crash-btn" onclick="toggle('crash')">On</button>
+    </div>
+    <div class="btn-group">
+      <label>&#9733; UFO Sightings</label>
+      <button class="gbtn" id="ufos-off" onclick="setMode('ufo','off')">Off</button>
+      <button class="gbtn on-heat" id="ufos-heat" onclick="setMode('ufo','heat')">Heat</button>
+      <button class="gbtn" id="ufos-dot" onclick="setMode('ufo','dot')">Pins</button>
+    </div>
+    <div class="btn-group">
+      <label>&#128062; Bigfoot</label>
+      <button class="gbtn" id="bf-off" onclick="setMode('bf','off')">Off</button>
+      <button class="gbtn on-heat" id="bf-heat" onclick="setMode('bf','heat')">Heat</button>
+      <button class="gbtn" id="bf-dot" onclick="setMode('bf','dot')">Pins</button>
+    </div>
+    <div class="btn-group">
+      <label>&#127795; Parks</label>
+      <button class="gbtn on-green" id="parks-btn" onclick="toggle('parks')">On</button>
+    </div>
   </div>
 </div>
 
@@ -334,8 +340,7 @@ function mkParkZone(d){
   circle.bindPopup(
     '<div class="popup-title">&#127795; '+d.name+'</div>'
     +'<div class="popup-field">State: <span>'+d.state+'</span></div>'
-    +(d.established?'<div class="popup-field">Established: <span>'+d.established+'</span></div>':'')+
-    '<div class="popup-field">Area: <span>'+(d.area_acres||d.area||'—')+'</span></div>'
+    +(d.established?'<div class="popup-field">Established: <span>'+d.established+'</span></div>':'')
   ,{maxWidth:240});
   circle.bindTooltip('<b>'+d.name+'</b>', {direction:'center', permanent:false, opacity:0.9});
   return circle;
