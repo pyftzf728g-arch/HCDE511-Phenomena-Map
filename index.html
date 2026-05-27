@@ -61,6 +61,10 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 .cat-bb{background:#100a00;color:#664422}
 .cat-nt{background:#1a1a00;color:#cccc00}
 
+/* ── Instructions box ────────────────────────────────── */
+#instructions{position:absolute;top:10px;left:50px;z-index:900;background:rgba(6,6,6,.92);border:1px solid #ffffff;border-radius:6px;padding:8px 11px;font-size:10px;color:#ffffff;max-width:280px;line-height:1.5;transition:opacity .4s;pointer-events:none}
+#instructions.hidden{opacity:0;pointer-events:none}
+
 /* ── Zoom hint ────────────────────────────────────────── */
 #zoom-hint{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:950;background:rgba(59,139,212,.15);border:1px solid rgba(59,139,212,.4);border-radius:20px;padding:5px 14px;font-size:10px;color:#7ecfff;pointer-events:none;transition:opacity .4s;letter-spacing:.5px}
 #zoom-hint.hidden{opacity:0}
@@ -164,6 +168,8 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
   <div id="map-area">
     <div id="map"></div>
 
+    <div id="instructions">Press play to animate the map, then use toggles, zoom, and clicks to explore sightings.</div>
+
     <div id="zoom-hint" class="hidden">&#128269; Zoom in to see individual clickable markers</div>
 
     <div id="loader">
@@ -180,7 +186,7 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
       <br><strong>&#128062; Bigfoot Sightings</strong>&nbsp;<span id="bf-legend-mode" style="color:#ffffff;font-size:9px">heatmap</span><br>
       <span class="lg" style="background:linear-gradient(to right,#1a0800,#7a3000,#C87D2F,#ffe8a0)"></span>density<br>
       <br><strong>&#127795; National Parks</strong>&nbsp;<span style="color:#ffffff;font-size:9px">shaded zones</span><br>
-      <span style="display:inline-block;width:36px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle;background:rgba(45,122,45,.35);border:1px dashed #4aaa4a"></span>area &prop; acreage
+      <span style="display:inline-block;width:36px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle;background:rgba(45,122,45,.35);border:1px dashed #4aaa4a"></span>area of the park
     </div>
 
     <div id="stats">
@@ -701,6 +707,9 @@ mainMap.on('moveend zoomend', function(){
 });
 
 mainMap.on('zoomend', function(){
+  const instrEl=document.getElementById('instructions');
+  if(mainMap.getZoom()>5) instrEl.classList.add('hidden');
+  else instrEl.classList.remove('hidden');
   updateZoomHint();
   const z=mainMap.getZoom();
   let changed=false;
