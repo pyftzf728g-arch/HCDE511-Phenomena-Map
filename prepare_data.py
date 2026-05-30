@@ -16,6 +16,7 @@ Source files expected in:
         Cleaned_Bigfoot_Films-2.xlsx
         Cleaned_UFO_Books_1900_2014.xlsx
         Cleaned_Bigfoot_Books_1900_2014.xlsx
+        Technology.xlsx
 """
 import json, os
 from collections import defaultdict
@@ -24,11 +25,8 @@ import pandas as pd
 # ------------------------------------------------------------------
 # FOLDER SETUP
 # ------------------------------------------------------------------
-# All Excel source files live in this subfolder of the repo.
-# Using os.path.join keeps paths correct on both Windows and Mac.
 DATA_FOLDER = os.path.join("Update UFO Bigfoot Dafa File")
 
-# Output folders for the JSON tiles that index.html reads
 os.makedirs("data/ufo_sightings", exist_ok=True)
 os.makedirs("data/bigfoot",       exist_ok=True)
 os.makedirs("data/static",        exist_ok=True)
@@ -38,18 +36,15 @@ os.makedirs("data/static",        exist_ok=True)
 # ------------------------------------------------------------------
 
 def src(filename):
-    """Build the full path to a source Excel file."""
     return os.path.join(DATA_FOLDER, filename)
 
 def safe_year(v):
-    """Safely parse a year from a date value. Returns 0 if it fails."""
     try:
         return int(pd.to_datetime(v, errors='coerce').year)
     except:
         return 0
 
 def write_json(path, data):
-    """Write data as compact JSON and print the file size."""
     with open(path, 'w') as f:
         json.dump(data, f, separators=(',', ':'))
     kb = os.path.getsize(path) / 1024
@@ -57,17 +52,12 @@ def write_json(path, data):
 
 
 # ── 1. UFO Sightings (large dataset) ──────────────────────────────────────────
-print("\n[1/6] UFO Sightings...")
+print("\n[1/7] UFO Sightings...")
 
 ufo = pd.read_excel(src("Cleaned_UFO_Sightings_US_Only-2.xlsx"))
-
-# Parse year from the Date column
 ufo['year'] = pd.to_datetime(ufo['Date'], errors='coerce').dt.year.fillna(0).astype(int)
-
-# Drop rows with no valid year
 ufo = ufo[ufo['year'] > 0]
 
-# Group into decade buckets (1910, 1920, ... 2010)
 decades = defaultdict(list)
 for _, r in ufo.iterrows():
     decade = (int(r['year']) // 10) * 10
@@ -92,31 +82,15 @@ write_json("data/ufo_sightings/manifest.json", {
 
 
 # ── 2. Bigfoot Sightings ──────────────────────────────────────────────────────
-print("\n[2/6] Bigfoot Sightings...")
+print("\n[2/7] Bigfoot Sightings...")
 
-# This file has NO header row — first row is already data.
-# Column positions (0-indexed):
-#   0 = City
-#   1 = State
-#   2 = County
-#   3 = Latitude
-#   4 = Longitude
-#   5 = Date
-#   6 = Classification (Class A / Class B)
 bf = pd.read_excel(src("Til_2014_Bigfoot_data_with_cities.xlsx"), header=None)
-
-# Assign readable column names based on position
 bf.columns = ['City', 'State', 'County', 'Latitude', 'Longitude',
               'Date', 'Classification', 'Temp', 'Precip',
               'Weather', 'Moon', 'Report']
-
-# Parse year from the Date column
 bf['year'] = pd.to_datetime(bf['Date'], errors='coerce').dt.year.fillna(0).astype(int)
-
-# Drop rows with no valid year
 bf = bf[bf['year'] > 0]
 
-# Group into decade buckets
 decades = defaultdict(list)
 for _, r in bf.iterrows():
     decade = (int(r['year']) // 10) * 10
@@ -140,10 +114,9 @@ write_json("data/bigfoot/manifest.json", {
 
 
 # ── 3. Nuclear Facilities ─────────────────────────────────────────────────────
-print("\n[3/6] Nuclear Facilities...")
+print("\n[3/7] Nuclear Facilities...")
 
 nf = pd.read_excel(src("Cleaned_US_Nuclear_Facilities-4.xlsx"))
-
 data = []
 for _, r in nf.iterrows():
     try:
@@ -164,10 +137,9 @@ print(f"     {len(data)} facilities")
 
 
 # ── 4. UFO Crashes ────────────────────────────────────────────────────────────
-print("\n[4/6] UFO Crashes...")
+print("\n[4/7] UFO Crashes...")
 
 ufc = pd.read_excel(src("Cleaned_US_UFO_Crashes-2.xlsx"))
-
 data = []
 for _, r in ufc.iterrows():
     y = safe_year(r['Date of Crash'])
@@ -186,10 +158,9 @@ print(f"     {len(data)} crashes")
 
 
 # ── 5. National Parks ─────────────────────────────────────────────────────────
-print("\n[5/6] National Parks...")
+print("\n[5/7] National Parks...")
 
 parks = pd.read_excel(src("Cleaned_US_National_Parks-2.xlsx"))
-
 data = []
 for _, r in parks.iterrows():
     try:
@@ -207,25 +178,25 @@ print(f"     {len(data)} parks")
 
 
 # ── 6. Cultural Events (films + books) ────────────────────────────────────────
-print("\n[6/6] Cultural Events...")
+print("\n[6/7] Cultural Events...")
 
 events = []
 
-# UFO Films — columns: Title (col 0), Date (col 1)
+# UFO Films
 ufo_films = pd.read_excel(src("Cleaned_UFO_Films-3.xlsx"))
 for _, r in ufo_films.iterrows():
     y = safe_year(r.iloc[1])
     if y:
         events.append({"title": str(r.iloc[0]), "year": y, "cat": "UFO Film"})
 
-# Bigfoot Films — no header row, Title (col 0), Date (col 1)
+# Bigfoot Films
 bf_films = pd.read_excel(src("Cleaned_Bigfoot_Films-2.xlsx"), header=None)
 for _, r in bf_films.iterrows():
     y = safe_year(r.iloc[1])
     if y:
         events.append({"title": str(r.iloc[0]), "year": y, "cat": "Bigfoot Film"})
 
-# UFO Books — columns: Book Title, Author, Date
+# UFO Books
 ufo_books = pd.read_excel(src("Cleaned_UFO_Books_1900_2014.xlsx"))
 for _, r in ufo_books.iterrows():
     try:
@@ -238,7 +209,7 @@ for _, r in ufo_books.iterrows():
     except:
         pass
 
-# Bigfoot Books — no header row, Title (col 0), Author (col 1), Year (col 2)
+# Bigfoot Books
 bf_books = pd.read_excel(src("Cleaned_Bigfoot_Books_1900_2014.xlsx"), header=None)
 for _, r in bf_books.iterrows():
     try:
@@ -251,9 +222,25 @@ for _, r in bf_books.iterrows():
     except:
         pass
 
+
+# ── 7. Technology Events ──────────────────────────────────────────────────────
+print("\n[7/7] Technology Events...")
+
+tech = pd.read_excel(src("Technology.xlsx"), header=1)
+tech.columns = ['title', 'date']
+tech = tech.dropna(subset=['title', 'date'])
+tech['year'] = pd.to_datetime(tech['date'], errors='coerce').dt.year
+tech = tech.dropna(subset=['year'])
+tech['year'] = tech['year'].astype(int)
+
+for _, r in tech.iterrows():
+    events.append({"title": str(r['title']), "year": int(r['year']), "cat": "New Technology"})
+
+print(f"     {len(tech)} technology events")
+
 events.sort(key=lambda x: x['year'])
 write_json("data/static/cultural_events.json", events)
-print(f"     {len(events)} events")
+print(f"     {len(events)} total events")
 
 
 print("\n✓ All data tiles generated successfully.")
