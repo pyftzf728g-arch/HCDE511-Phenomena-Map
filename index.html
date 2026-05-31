@@ -59,7 +59,7 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 .cat-bf{background:#1a0a00;color:#aa6622}
 .cat-ub{background:#001833;color:#4499dd}
 .cat-bb{background:#1a0a00;color:#aa6622}
-.cat-nt{background:#1a1a00;color:#cccc00}
+.cat-nt{background:#1a0020;color:#ff88ff}
 
 /* ── Instructions box ────────────────────────────────── */
 #instructions{position:absolute;top:10px;left:50px;z-index:900;background:rgba(6,6,6,.92);border:1px solid #ffffff;border-radius:6px;padding:8px 11px;font-size:10px;color:#ffffff;max-width:280px;line-height:1.5;transition:opacity .4s;pointer-events:none}
@@ -113,7 +113,7 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 <body>
 
 <div id="controls">
-  <div id="controls-title">US Paranormal Phenomena: UFO and Bigfoot Sightings from 1910 to 2014</div>
+  <div id="controls-title">US Paranormal Phenomena: <span style="color:#D97757">Bigfoot</span> and <span style="color:#4499dd">UFO</span> Sightings from 1910 to 2014</div>
   <div id="controls-row1">
     <span id="year-lbl">1910</span>
     <div id="slider-wrap">
@@ -138,28 +138,34 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
   </div>
   <div id="controls-row2">
     <div class="btn-group">
+      <label>&#9733; UFO Sightings</label>
+      <button class="gbtn" id="ufos-off" onclick="setMode('ufo','off')">Off</button>
+      <button class="gbtn on-heat" id="ufos-heat" onclick="setMode('ufo','heat')">Heat</button>
+      <button class="gbtn" id="ufos-dot" onclick="setMode('ufo','dot')">Pins</button>
+    </div>
+    <div class="btn-group">
+      <label>&#128062; Bigfoot</label>
+      <button class="gbtn" id="bf-off" onclick="setMode('bf','off')">Off</button>
+      <button class="gbtn on-heat" id="bf-heat" onclick="setMode('bf','heat')">Heat</button>
+      <button class="gbtn" id="bf-dot" onclick="setMode('bf','dot')">Pins</button>
+    </div>
+    <div class="btn-group">
+      <label>&#9733; UFO &amp; Bigfoot Overlap</label>
+      <button class="gbtn" id="overlap-off" onclick="setOverlap('off')">Off</button>
+      <button class="gbtn on-heat" id="overlap-heat" onclick="setOverlap('heat')">Heat</button>
+      <button class="gbtn" id="overlap-dot" onclick="setOverlap('dot')">Pins</button>
+    </div>
+    <div class="btn-group">
+      <label>&#127795; National Parks</label>
+      <button class="gbtn" id="parks-btn" onclick="toggle('parks')">On</button>
+    </div>
+    <div class="btn-group">
       <label><img src="Radiation_Icon.png" width="13" height="13" style="vertical-align:middle;margin-right:4px"/>Nuclear</label>
       <button class="gbtn" id="nuke-btn" onclick="toggle('nuclear')">On</button>
     </div>
     <div class="btn-group">
       <label><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="8" fill="none" stroke="#63C55A" stroke-width="1" opacity=".5"/><circle cx="12" cy="12" r="4" fill="#63C55A" fill-opacity=".9" stroke="#fff" stroke-width="1"/><line x1="12" y1="2" x2="12" y2="6" stroke="#63C55A" stroke-width="1.5"/><line x1="18" y1="12" x2="22" y2="12" stroke="#63C55A" stroke-width="1.5"/><line x1="2" y1="12" x2="6" y2="12" stroke="#63C55A" stroke-width="1.5"/><line x1="12" y1="18" x2="12" y2="22" stroke="#63C55A" stroke-width="1.5"/></svg>UFO Crashes</label>
       <button class="gbtn" id="crash-btn" onclick="toggle('crash')">On</button>
-    </div>
-    <div class="btn-group">
-      <label>&#9733; UFO Sightings</label>
-      <button class="gbtn" id="ufos-off" onclick="setMode('ufo','off')">Off</button>
-      <button class="gbtn" id="ufos-heat" onclick="setMode('ufo','heat')">Heat</button>
-      <button class="gbtn on-dot" id="ufos-dot" onclick="setMode('ufo','dot')">Pins</button>
-    </div>
-    <div class="btn-group">
-      <label>&#128062; Bigfoot</label>
-      <button class="gbtn" id="bf-off" onclick="setMode('bf','off')">Off</button>
-      <button class="gbtn" id="bf-heat" onclick="setMode('bf','heat')">Heat</button>
-      <button class="gbtn on-dot" id="bf-dot" onclick="setMode('bf','dot')">Pins</button>
-    </div>
-    <div class="btn-group">
-      <label>&#127795; National Parks</label>
-      <button class="gbtn" id="parks-btn" onclick="toggle('parks')">On</button>
     </div>
   </div>
 </div>
@@ -185,8 +191,8 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
       <span class="lg" style="background:linear-gradient(to right,#8A9DEA,#466EDD,#2E14F0,#1C00F0)"></span>density<br>
       <br><strong>&#128062; Bigfoot Sightings</strong>&nbsp;<span id="bf-legend-mode" style="color:#ffffff;font-size:9px">heatmap</span><br>
       <span class="lg" style="background:linear-gradient(to right,#C8866A,#B85614,#983D01,#702D00)"></span>density<br>
-      <br><strong>&#9733; UFO &#x2229; Bigfoot Overlap</strong>&nbsp;<span style="color:#ffffff;font-size:9px">heatmap</span><br>
-      <span class="lg" style="background:linear-gradient(to right,#1a4a18,#4d9e45,#a1d99b)"></span>density<br>
+      <br><strong>&#9733; UFO and Bigfoot Overlap</strong>&nbsp;<span id="overlap-legend-mode" style="color:#ffffff;font-size:9px">heatmap</span><br>
+      <span class="lg" style="background:linear-gradient(to right,transparent,#3a0060,#8800cc,#cc44ff,#ff88ff)"></span>density<br>
       <br><strong>&#127795; National Parks</strong>&nbsp;<span style="color:#ffffff;font-size:9px">shaded zones</span><br>
       <span style="display:inline-block;width:36px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle;background:rgba(45,122,45,.35);border:1px dashed #4aaa4a"></span>area of the park
     </div>
@@ -244,11 +250,13 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
 mainMap.fitBounds([[24,-125],[50,-66]]);
 mainMap.createPane('ufoHeatPane');
 mainMap.getPane('ufoHeatPane').style.zIndex=400;
-mainMap.getPane('ufoHeatPane').style.opacity='0.75';
+mainMap.getPane('ufoHeatPane').style.opacity='0.60';
 mainMap.createPane('bfHeatPane');
 mainMap.getPane('bfHeatPane').style.zIndex=401;
+mainMap.getPane('bfHeatPane').style.opacity='0.60';
 mainMap.createPane('overlapHeatPane');
 mainMap.getPane('overlapHeatPane').style.zIndex=402;
+mainMap.getPane('overlapHeatPane').style.opacity='1.0';
 
 const renderer = L.canvas({padding:0.5});
 
@@ -266,9 +274,9 @@ const bfHeat = L.heatLayer([],{
   pane:'bfHeatPane'
 });
 const overlapHeat = L.heatLayer([],{
-  radius:25,blur:30,maxZoom:10,
-  minOpacity:0.6,
-  gradient:{0.0:'#1a4a18',0.5:'#4d9e45',1.0:'#a1d99b'},
+  radius:15,blur:18,maxZoom:10,
+  minOpacity:0.7,
+  gradient:{0.0:'rgba(0,0,0,0)',0.5:'#3a0060',0.7:'#8800cc',0.85:'#cc44ff',1.0:'#ff88ff'},
   pane:'overlapHeatPane'
 });
 
@@ -297,6 +305,24 @@ function makeCluster(type){
 
 const ufoCluster = makeCluster('ufo');
 const bfCluster  = makeCluster('bf');
+const overlapCluster = L.markerClusterGroup({
+  maxClusterRadius:60, spiderfyOnMaxZoom:true, chunkedLoading:true,
+  iconCreateFunction:function(cluster){
+    const count=cluster.getChildCount();
+    const size=count<50?28:count<200?34:40;
+    return L.divIcon({
+      html:'<div style="width:'+size+'px;height:'+size+'px;font-size:'+(size<34?9:11)+'px;background:rgba(60,0,100,.85);border:1px solid #cc44ff;border-radius:50%;color:#ff88ff;display:flex;align-items:center;justify-content:center;font-family:\'Courier New\',monospace;font-weight:bold">'+(count>999?Math.round(count/1000)+'k':count)+'</div>',
+      className:'',iconSize:[size,size],iconAnchor:[size/2,size/2]
+    });
+  }
+});
+
+function mkOverlapPin(){
+  return L.divIcon({
+    html:'<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#8800cc" fill-opacity=".85" stroke="#ff88ff" stroke-width=".8"/></svg>',
+    className:'',iconSize:[10,10],iconAnchor:[5,5]
+  });
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // ICON BUILDERS
@@ -438,7 +464,7 @@ async function loadDecades(prefix, cache, loaded, allPts, markerPool, mkIcon, po
 // ═══════════════════════════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════════════════════════
-let showNuclear=false, showCrash=false, ufoMode='dot', bfMode='dot', showParks=false;
+let showNuclear=false, showCrash=false, ufoMode='heat', bfMode='heat', showParks=false, overlapMode='heat';
 let playing=false, timer=null, currentYear=1910;
 let nukeMarkers=[], crashMarkers=[], parkMarkers=[];
 let staticReady=false;
@@ -570,28 +596,26 @@ function computeOverlapPts(year){
   ufoAllPts.forEach(function(p){
     const y=Array.isArray(p)?p[2]:p.year;
     if(y>year) return;
-    const lat=Math.round((Array.isArray(p)?p[0]:p.lat)*2)/2;
-    const lng=Math.round((Array.isArray(p)?p[1]:p.lng)*2)/2;
+    const lat=Math.round((Array.isArray(p)?p[0]:p.lat)*4)/4;
+    const lng=Math.round((Array.isArray(p)?p[1]:p.lng)*4)/4;
     const k=lat+','+lng;
     ufoGrid.set(k,(ufoGrid.get(k)||0)+1);
   });
   const bfGrid=new Map();
   bfAllPts.forEach(function(p){
     if(p.year>year) return;
-    const lat=Math.round(p.lat*2)/2;
-    const lng=Math.round(p.lng*2)/2;
+    const lat=Math.round(p.lat*4)/4;
+    const lng=Math.round(p.lng*4)/4;
     const k=lat+','+lng;
     if(!bfGrid.has(k)) bfGrid.set(k,{count:0,lat:p.lat,lng:p.lng});
     bfGrid.get(k).count++;
   });
-  const ufoSorted=Array.from(ufoGrid.values()).sort(function(a,b){return a-b;});
-  const ufoThresh=ufoSorted[Math.floor(ufoSorted.length*0.80)]||1;
-  const bfSorted=Array.from(bfGrid.values()).map(function(v){return v.count;}).sort(function(a,b){return a-b;});
-  const bfThresh=bfSorted[Math.floor(bfSorted.length*0.80)]||1;
   const pts=[];
   bfGrid.forEach(function(val,k){
-    if(val.count>=bfThresh&&ufoGrid.has(k)&&ufoGrid.get(k)>=ufoThresh){
-      pts.push([val.lat,val.lng,1.0]);
+    if(ufoGrid.has(k)){
+      const ufoCount=ufoGrid.get(k);
+      const combined=val.count+ufoCount;
+      pts.push({lat:val.lat,lng:val.lng,intensity:Math.min(1,combined/20),ufoCount:ufoCount,bfCount:val.count});
     }
   });
   return pts;
@@ -694,13 +718,33 @@ async function update(year){
     document.getElementById('bf-legend-mode').textContent='pins + clusters';
   }
 
-  // Overlap heatmap — only when both UFO and Bigfoot are in heat mode
-  if(ufoMode==='heat' && bfMode==='heat' && zoom < ZOOM_THRESHOLD){
+  // Overlap layer
+  if(overlapMode==='off'){
     if(mainMap.hasLayer(overlapHeat)) mainMap.removeLayer(overlapHeat);
-    mainMap.addLayer(overlapHeat);
-    overlapHeat.setLatLngs(computeOverlapPts(year));
+    if(mainMap.hasLayer(overlapCluster)) mainMap.removeLayer(overlapCluster);
   } else {
-    if(mainMap.hasLayer(overlapHeat)) mainMap.removeLayer(overlapHeat);
+    await loadDecades('ufo_sightings',ufoCache,ufoLoaded,ufoAllPts,null,null,null,year,'UFO');
+    await loadDecades('bigfoot',bfCache,bfLoaded,bfAllPts,null,null,null,year,'Bigfoot');
+    if(overlapMode==='heat' && zoom < ZOOM_THRESHOLD){
+      if(mainMap.hasLayer(overlapCluster)) mainMap.removeLayer(overlapCluster);
+      if(mainMap.hasLayer(overlapHeat)) mainMap.removeLayer(overlapHeat);
+      mainMap.addLayer(overlapHeat);
+      overlapHeat.setLatLngs(computeOverlapPts(year).map(function(p){return[p.lat,p.lng,p.intensity];}));
+    } else if(overlapMode==='dot' || (overlapMode==='heat' && zoom >= ZOOM_THRESHOLD)){
+      if(mainMap.hasLayer(overlapHeat)) mainMap.removeLayer(overlapHeat);
+      if(!mainMap.hasLayer(overlapCluster)) mainMap.addLayer(overlapCluster);
+      overlapCluster.clearLayers();
+      computeOverlapPts(year).forEach(function(pt){
+        const m=L.marker([pt.lat,pt.lng],{icon:mkOverlapPin()});
+        m.bindPopup(
+          '<div class="popup-title">&#9733; UFO &amp; Bigfoot Overlap</div>'
+          +'<div class="popup-field">&#9733; UFO Sightings nearby: <span>'+pt.ufoCount+'</span></div>'
+          +'<div class="popup-field">&#128062; Bigfoot Sightings nearby: <span>'+pt.bfCount+'</span></div>'
+          +'<div class="popup-field">Total Sightings: <span>'+(pt.ufoCount+pt.bfCount)+'</span></div>'
+        ,{maxWidth:260});
+        overlapCluster.addLayer(m);
+      });
+    }
   }
 
   updateZoomHint();
@@ -711,8 +755,10 @@ async function update(year){
 // ═══════════════════════════════════════════════════════════════════════════════
 function updateSidebar(year){
   if(!window.EVENTS) return;
+  const overlapOn=(overlapMode==='heat'||overlapMode==='dot');
   const visible=window.EVENTS.filter(function(e){
     if(e.year>year) return false;
+    if(overlapOn) return true;
     if(ufoMode==='off' && (e.cat==='UFO Film'||e.cat==='UFO Book')) return false;
     if(bfMode==='off' && (e.cat==='Bigfoot Film'||e.cat==='Bigfoot Book')) return false;
     return true;
@@ -735,6 +781,25 @@ function toggle(layer){
   if(layer==='nuclear'){showNuclear=!showNuclear;document.getElementById('nuke-btn').classList.toggle('on',showNuclear);}
   else if(layer==='crash'){showCrash=!showCrash;document.getElementById('crash-btn').classList.toggle('on',showCrash);}
   else if(layer==='parks'){showParks=!showParks;document.getElementById('parks-btn').classList.toggle('on-green',showParks);}
+  update(currentYear);
+}
+
+function setOverlap(mode){
+  overlapMode=mode;
+  ['off','heat','dot'].forEach(function(m){
+    const btn=document.getElementById('overlap-'+m);
+    if(btn) btn.className='gbtn';
+  });
+  if(mode==='off'){
+    document.getElementById('overlap-off').classList.add('on');
+    document.getElementById('overlap-legend-mode').textContent='off';
+  } else if(mode==='heat'){
+    document.getElementById('overlap-heat').classList.add('on-heat');
+    document.getElementById('overlap-legend-mode').textContent='heatmap';
+  } else if(mode==='dot'){
+    document.getElementById('overlap-dot').classList.add('on-dot');
+    document.getElementById('overlap-legend-mode').textContent='pins + clusters';
+  }
   update(currentYear);
 }
 
