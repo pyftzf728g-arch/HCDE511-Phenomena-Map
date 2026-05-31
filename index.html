@@ -37,6 +37,8 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 .sbtn{background:transparent;border:1px solid #222;border-radius:4px;color:#ffffff;font-family:inherit;font-size:10px;padding:3px 8px;cursor:pointer;transition:all .15s}
 .sbtn:hover{background:#181818;color:#fff}
 .sbtn.on{background:#0f2540;border-color:#3B8BD4;color:#7ecfff}
+.gbtn:disabled{color:#333!important;cursor:not-allowed}
+.btn-group.disabled{opacity:0.35;pointer-events:none}
 
 /* ── Main layout ──────────────────────────────────────── */
 #main{display:flex;flex:1;overflow:hidden}
@@ -95,6 +97,9 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 .ufo-cluster-icon{background:rgba(0,20,60,.85);border:1px solid #0055cc;border-radius:50%;color:#4499ff;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'Courier New',monospace;font-weight:bold}
 .bf-cluster-icon{background:rgba(40,15,0,.85);border:1px solid #7a3a00;border-radius:50%;color:#c87a30;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'Courier New',monospace;font-weight:bold}
 
+/* ── Spiderfy legs ────────────────────────────────────── */
+.leaflet-marker-spider-leg{stroke:#ffffff!important;stroke-opacity:1!important}
+
 /* ── Park zone circles ────────────────────────────────── */
 .park-zone-path{transition:fill-opacity .2s,stroke-opacity .2s}
 
@@ -138,7 +143,7 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
   </div>
   <div id="controls-row2">
     <div class="btn-group">
-      <label>&#9733; UFO &amp; Bigfoot Overlap</label>
+      <label>&#9733; UFO &amp; Bigfoot Sightings Overlap</label>
       <button class="gbtn" id="overlap-off" onclick="setOverlap('off')">Off</button>
       <button class="gbtn on-heat" id="overlap-heat" onclick="setOverlap('heat')">Heat</button>
     </div>
@@ -322,6 +327,17 @@ function mkOverlapPin(){
     className:'',iconSize:[10,10],iconAnchor:[5,5]
   });
 }
+
+function styleSpiderLegs(clusterGroup){
+  clusterGroup.on('spiderfied',function(e){
+    e.markers.forEach(function(m){
+      if(m._spiderLeg) m._spiderLeg.setStyle({color:'#ffffff',weight:3,opacity:0.05});
+    });
+  });
+}
+styleSpiderLegs(ufoCluster);
+styleSpiderLegs(bfCluster);
+styleSpiderLegs(overlapCluster);
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // ICON BUILDERS
@@ -803,6 +819,7 @@ function setOverlap(mode){
     document.getElementById('overlap-dot').classList.add('on-dot');
     document.getElementById('overlap-legend-mode').textContent='pins + clusters';
   }
+  updateOverlapToggleState();
   update(currentYear);
 }
 
@@ -826,7 +843,45 @@ function setMode(layer,mode){
   }
   ufoCluster.clearLayers(); ufoMarkerPool.clear();
   bfCluster.clearLayers();  bfMarkerPool.clear();
+  // When UFO switches to heat, turn off Bigfoot heat
+  if(layer==='ufo' && mode==='heat' && bfMode==='heat'){
+    bfMode='off';
+    ['off','heat','dot'].forEach(function(m){const btn=document.getElementById('bf-'+m);if(btn)btn.classList.remove('on','on-heat','on-dot');});
+    document.getElementById('bf-off').classList.add('on');
+  }
+  // When Bigfoot switches to heat, turn off UFO heat
+  if(layer==='bf' && mode==='heat' && ufoMode==='heat'){
+    ufoMode='off';
+    ['off','heat','dot'].forEach(function(m){const btn=document.getElementById('ufos-'+m);if(btn)btn.classList.remove('on','on-heat','on-dot');});
+    document.getElementById('ufos-off').classList.add('on');
+  }
+  if(mode==='heat' && overlapMode!=='off'){
+    setOverlap('off');
+    return;
+  }
+  updateOverlapToggleState();
   update(currentYear);
+}
+
+function updateOverlapToggleState(){
+  const heatActive=(ufoMode==='heat'||bfMode==='heat');
+  const group=document.querySelector('.btn-group:has(#overlap-heat)');
+  if(group){
+    if(heatActive) group.classList.add('disabled');
+    else group.classList.remove('disabled');
+  }
+  // Disable Bigfoot toggle when UFO heat is on
+  const bfGroup=document.querySelector('.btn-group:has(#bf-heat)');
+  if(bfGroup){
+    if(ufoMode==='heat') bfGroup.classList.add('disabled');
+    else bfGroup.classList.remove('disabled');
+  }
+  // Disable UFO toggle when Bigfoot heat is on
+  const ufoGroup=document.querySelector('.btn-group:has(#ufos-heat)');
+  if(ufoGroup){
+    if(bfMode==='heat') ufoGroup.classList.add('disabled');
+    else ufoGroup.classList.remove('disabled');
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
