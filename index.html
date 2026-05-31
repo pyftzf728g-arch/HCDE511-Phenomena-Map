@@ -59,7 +59,7 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
 .cat-bf{background:#1a0a00;color:#aa6622}
 .cat-ub{background:#001833;color:#4499dd}
 .cat-bb{background:#1a0a00;color:#aa6622}
-.cat-nt{background:#1a0020;color:#ff88ff}
+.cat-nt{background:#1a1a00;color:#e8e020}
 
 /* ── Instructions box ────────────────────────────────── */
 #instructions{position:absolute;top:10px;left:50px;z-index:900;background:rgba(6,6,6,.92);border:1px solid #ffffff;border-radius:6px;padding:8px 11px;font-size:10px;color:#ffffff;max-width:280px;line-height:1.5;transition:opacity .4s;pointer-events:none}
@@ -138,22 +138,21 @@ body{font-family:'Courier New',monospace;background:#0d0d0d;color:#ddd;display:f
   </div>
   <div id="controls-row2">
     <div class="btn-group">
+      <label>&#9733; UFO &amp; Bigfoot Overlap</label>
+      <button class="gbtn" id="overlap-off" onclick="setOverlap('off')">Off</button>
+      <button class="gbtn on-heat" id="overlap-heat" onclick="setOverlap('heat')">Heat</button>
+    </div>
+    <div class="btn-group">
       <label>&#9733; UFO Sightings</label>
-      <button class="gbtn" id="ufos-off" onclick="setMode('ufo','off')">Off</button>
-      <button class="gbtn on-heat" id="ufos-heat" onclick="setMode('ufo','heat')">Heat</button>
+      <button class="gbtn on" id="ufos-off" onclick="setMode('ufo','off')">Off</button>
+      <button class="gbtn" id="ufos-heat" onclick="setMode('ufo','heat')">Heat</button>
       <button class="gbtn" id="ufos-dot" onclick="setMode('ufo','dot')">Pins</button>
     </div>
     <div class="btn-group">
       <label>&#128062; Bigfoot</label>
-      <button class="gbtn" id="bf-off" onclick="setMode('bf','off')">Off</button>
-      <button class="gbtn on-heat" id="bf-heat" onclick="setMode('bf','heat')">Heat</button>
+      <button class="gbtn on" id="bf-off" onclick="setMode('bf','off')">Off</button>
+      <button class="gbtn" id="bf-heat" onclick="setMode('bf','heat')">Heat</button>
       <button class="gbtn" id="bf-dot" onclick="setMode('bf','dot')">Pins</button>
-    </div>
-    <div class="btn-group">
-      <label>&#9733; UFO &amp; Bigfoot Overlap</label>
-      <button class="gbtn" id="overlap-off" onclick="setOverlap('off')">Off</button>
-      <button class="gbtn on-heat" id="overlap-heat" onclick="setOverlap('heat')">Heat</button>
-      <button class="gbtn" id="overlap-dot" onclick="setOverlap('dot')">Pins</button>
     </div>
     <div class="btn-group">
       <label>&#127795; National Parks</label>
@@ -464,7 +463,7 @@ async function loadDecades(prefix, cache, loaded, allPts, markerPool, mkIcon, po
 // ═══════════════════════════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════════════════════════
-let showNuclear=false, showCrash=false, ufoMode='heat', bfMode='heat', showParks=false, overlapMode='heat';
+let showNuclear=false, showCrash=false, ufoMode='off', bfMode='off', showParks=false, overlapMode='heat';
 let playing=false, timer=null, currentYear=1910;
 let nukeMarkers=[], crashMarkers=[], parkMarkers=[];
 let staticReady=false;
@@ -725,12 +724,12 @@ async function update(year){
   } else {
     await loadDecades('ufo_sightings',ufoCache,ufoLoaded,ufoAllPts,null,null,null,year,'UFO');
     await loadDecades('bigfoot',bfCache,bfLoaded,bfAllPts,null,null,null,year,'Bigfoot');
-    if(overlapMode==='heat' && zoom < ZOOM_THRESHOLD){
+    if(overlapMode==='heat'){
       if(mainMap.hasLayer(overlapCluster)) mainMap.removeLayer(overlapCluster);
       if(mainMap.hasLayer(overlapHeat)) mainMap.removeLayer(overlapHeat);
       mainMap.addLayer(overlapHeat);
       overlapHeat.setLatLngs(computeOverlapPts(year).map(function(p){return[p.lat,p.lng,p.intensity];}));
-    } else if(overlapMode==='dot' || (overlapMode==='heat' && zoom >= ZOOM_THRESHOLD)){
+    } else if(overlapMode==='dot'){
       if(mainMap.hasLayer(overlapHeat)) mainMap.removeLayer(overlapHeat);
       if(!mainMap.hasLayer(overlapCluster)) mainMap.addLayer(overlapCluster);
       overlapCluster.clearLayers();
@@ -756,6 +755,10 @@ async function update(year){
 function updateSidebar(year){
   if(!window.EVENTS) return;
   const overlapOn=(overlapMode==='heat'||overlapMode==='dot');
+  if(ufoMode==='off' && bfMode==='off' && !overlapOn){
+    document.getElementById('sidebar-content').innerHTML='';
+    return;
+  }
   const visible=window.EVENTS.filter(function(e){
     if(e.year>year) return false;
     if(overlapOn) return true;
